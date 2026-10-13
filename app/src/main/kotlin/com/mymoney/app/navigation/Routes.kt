@@ -33,6 +33,23 @@ import kotlinx.serialization.Serializable
 
 // Secondary destinations.
 @Serializable data object SettingsRoute
+@Serializable data object CategoriesRoute
+@Serializable data object CurrenciesRoute
+@Serializable data object RatesRoute
+
+/** New/edit/copy/refund/adjust editor. [mode] is an `EditorMode` name. */
+@Serializable
+data class EntryEditorRoute(
+    val mode: String = "EXPENSE",
+    val groupId: String? = null,
+    val accountId: String? = null,
+    val refundOf: String? = null,
+    val copyOf: String? = null,
+)
+
+@Serializable data class EntryDetailRoute(val groupId: String)
+@Serializable data class AccountDetailRoute(val accountId: String)
+@Serializable data class AccountEditorRoute(val accountId: String? = null)
 
 enum class TopLevelDestination(
     val graph: Any,
@@ -53,3 +70,4 @@ enum class TopLevelDestination(
     ),
     REPORTS(ReportsGraph, ReportsRoute::class, R.string.nav_reports, Icons.Filled.Insights, Icons.Outlined.Insights),
 }
+

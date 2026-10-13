@@ -7,11 +7,18 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mymoney.app.ui.MyMoneyRoot
+import com.mymoney.core.designsystem.format.Formats
+import com.mymoney.core.designsystem.format.LocalFormats
 import com.mymoney.core.designsystem.theme.MyMoneyTheme
+import com.mymoney.core.domain.settings.AppLanguage
+import com.mymoney.core.domain.settings.AppSettings
 import com.mymoney.core.domain.settings.ThemeMode
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -45,8 +52,15 @@ class MainActivity : AppCompatActivity() {
                 ThemeMode.LIGHT -> false
                 ThemeMode.DARK -> true
             }
+            // The resource configuration reflects the per-app locale chosen by the user.
+            val language = AppLanguage.fromTag(LocalConfiguration.current.locales[0]?.language) ?: AppLanguage.EN
+            val formats = remember(settings, state.currencies, language) {
+                Formats(settings ?: AppSettings(), language, state.currencies)
+            }
             MyMoneyTheme(darkTheme = dark, dynamicColor = settings?.dynamicColor == true) {
-                MyMoneyRoot(state = state)
+                CompositionLocalProvider(LocalFormats provides formats) {
+                    MyMoneyRoot(state = state, onToggleHideAmounts = viewModel::toggleHideAmounts)
+                }
             }
         }
     }

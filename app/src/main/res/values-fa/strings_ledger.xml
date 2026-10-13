@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common actions -->
+    <string name="action_apply">اعمال</string>
+    <string name="action_clear">پاک کردن</string>
+    <string name="action_confirm">تأیید</string>
+    <string name="action_copy">کپی</string>
+    <string name="action_edit">ویرایش</string>
+    <string name="action_filter">فیلتر</string>
+    <string name="action_next">بعدی</string>
+    <string name="action_next_month">ماه بعد</string>
+    <string name="action_ok">باشه</string>
+    <string name="action_previous_month">ماه قبل</string>
+    <string name="action_quick_add">ثبت تراکنش</string>
+    <string name="action_today">امروز</string>
+    <string name="action_undo">بازگردانی</string>
+
+    <!-- Periods -->
+    <string name="period_this_month">این ماه</string>
+    <string name="period_last_month">ماه قبل</string>
+    <string name="period_this_year">امسال</string>
+
+    <!-- Entry kinds -->
+    <string name="kind_opening_balance">موجودی اولیه</string>
+    <string name="kind_income">درآمد</string>
+    <string name="kind_expense">هزینه</string>
+    <string name="kind_refund">برگشت وجه</string>
+    <string name="kind_transfer">انتقال</string>
+    <string name="kind_adjustment">اصلاح موجودی</string>
+    <string name="kind_asset_buy">خرید دارایی</string>
+    <string name="kind_asset_sell">فروش دارایی</string>
+    <string name="kind_write_off">سوخت / بخشش</string>
+
+    <!-- Home -->
+    <string name="home_net_worth">ارزش خالص</string>
+    <string name="home_assets">دارایی‌ها</string>
+    <string name="home_liabilities">بدهی‌ها</string>
+    <string name="home_liquid">نقدینگی قابل استفاده</string>
+    <string name="home_income">درآمد</string>
+    <string name="home_expense">هزینه</string>
+    <string name="home_net">خالص (درآمد منهای هزینه)</string>
+    <string name="home_vs_previous">پیکان‌ها مقایسه با دوره قبلیِ هم‌اندازه است.</string>
+    <string name="home_recent">آخرین تراکنش‌ها</string>
+    <string name="home_see_all">همه</string>
+    <string name="home_missing_rates">نرخ تبدیل برای این‌ها ثبت نشده: %1$s. این مبالغ در جمع‌ها حساب نشده‌اند.</string>
+    <string name="home_approximate_rates">برخی تبدیل‌ها با نرخی بعد از تاریخ تراکنش انجام شده‌اند (تقریبی).</string>
+    <string name="home_empty_title">با یک حساب شروع کنیم</string>
+    <string name="home_empty_message">حساب بانکی، کیف پول نقدی یا کارت خود را اضافه کنید. همه اطلاعات فقط روی همین گوشی می‌ماند.</string>
+
+    <!-- Transactions -->
+    <string name="tx_search_hint">جست‌وجو…</string>
+    <string name="tx_empty_title">هنوز تراکنشی ثبت نشده</string>
+    <string name="tx_empty_message">برای ثبت اولین درآمد یا هزینه، دکمه + را بزنید.</string>
+    <string name="tx_no_results_title">موردی پیدا نشد</string>
+    <string name="tx_no_results_message">چند فیلتر را بردارید.</string>
+    <string name="tx_deleted">تراکنش حذف شد</string>
+    <string name="tx_pending">معلق</string>
+    <string name="tx_split_count">تقسیم بین %1$d دسته</string>
+    <string name="tx_transfer_to">%1$s ← %2$s</string>
+    <string name="tx_filter_title">فیلترها</string>
+    <string name="tx_filter_kind">نوع</string>
+    <string name="tx_filter_account">حساب</string>
+    <string name="tx_filter_category">دسته‌بندی</string>
+    <string name="tx_filter_from">از تاریخ</string>
+    <string name="tx_filter_to">تا تاریخ</string>
+
+    <!-- Editor -->
+    <string name="editor_title_new">تراکنش جدید</string>
+    <string name="editor_title_edit">ویرایش تراکنش</string>
+    <string name="editor_title_refund">برگشت وجه</string>
+    <string name="editor_title_adjust">اصلاح موجودی</string>
+    <string name="editor_account">حساب</string>
+    <string name="editor_from_account">از حساب</string>
+    <string name="editor_to_account">به حساب</string>
+    <string name="editor_amount">مبلغ</string>
+    <string name="editor_amount_sent">مبلغ ارسالی</string>
+    <string name="editor_amount_received">مبلغ دریافتی</string>
+    <string name="editor_implied_rate">نرخ به‌دست‌آمده: ۱ %1$s = %2$s %3$s</string>
+    <string name="editor_fee">کارمزد (اختیاری)</string>
+    <string name="editor_fee_hint">به‌صورت هزینه جداگانه «کارمزد بانکی» از حساب مبدأ ثبت می‌شود.</string>
+    <string name="editor_category">دسته‌بندی</string>
+    <string name="editor_split">تقسیم بین چند دسته</string>
+    <string name="editor_add_split">افزودن بخش</string>
+    <string name="editor_split_remaining">تخصیص‌نیافته: %1$s</string>
+    <string name="editor_date">تاریخ</string>
+    <string name="editor_time">ساعت</string>
+    <string name="editor_more_options">جزئیات بیشتر</string>
+    <string name="editor_payee">طرف حساب / فروشگاه</string>
+    <string name="editor_note">یادداشت</string>
+    <string name="editor_pending">معلق (هنوز قطعی نشده)</string>
+    <string name="editor_cost_type">نوع هزینه</string>
+    <string name="editor_fixed">ثابت</string>
+    <string name="editor_variable">متغیر</string>
+    <string name="editor_essential">ضروری</string>
+    <string name="editor_optional">اختیاری</string>
+    <string name="editor_tags">برچسب‌ها</string>
+    <string name="editor_new_tag">برچسب جدید</string>
+    <string name="editor_duplicate_title">احتمال ثبت تکراری</string>
+    <string name="editor_duplicate_message">تراکنشی با همین حساب، مبلغ و طرف حساب در %1$s ثبت شده است. این یکی هم ثبت شود؟</string>
+    <string name="editor_save_anyway">باز هم ثبت کن</string>
+    <string name="editor_refundable">مبلغ قابل برگشت: %1$s</string>
+    <string name="editor_adjust_current">موجودی در برنامه:</string>
+    <string name="editor_adjust_actual">موجودی واقعی</string>
+    <string name="editor_adjust_reason">دلیل (الزامی)</string>
+    <string name="editor_saved">ذخیره شد</string>
+    <string name="editor_select_account">انتخاب حساب</string>
+    <string name="editor_select_category">انتخاب دسته‌بندی</string>
+    <string name="editor_no_accounts">ابتدا یک حساب بسازید (تب دارایی‌ها).</string>
+
+    <!-- Entry detail -->
+    <string name="detail_title">تراکنش</string>
+    <string name="detail_missing">این تراکنش دیگر وجود ندارد.</string>
+    <string name="detail_delete_confirm">این تراکنش حذف شود؟ تا ۳۰ روز از سطل زباله قابل بازگردانی است.</string>
+    <string name="detail_delete_has_refunds">برای این هزینه برگشت وجه ثبت شده است. ابتدا برگشت‌ها را حذف کنید.</string>
+    <string name="detail_refunded">برگشت داده‌شده:</string>
+    <string name="detail_refund_action">ثبت برگشت وجه</string>
+    <string name="detail_created">ثبت‌شده در %1$s</string>
+
+    <!-- Accounts -->
+    <string name="acc_add">افزودن حساب</string>
+    <string name="acc_new">حساب جدید</string>
+    <string name="acc_edit">ویرایش حساب</string>
+    <string name="acc_empty_title">هنوز حسابی ندارید</string>
+    <string name="acc_empty_message">حساب‌ها محل نگهداری پول شما هستند: حساب بانکی، پول نقد، کارت، ارز.</string>
+    <string name="acc_name">نام حساب</string>
+    <string name="acc_type">نوع</string>
+    <string name="acc_type_cash">پول نقد</string>
+    <string name="acc_type_bank">حساب بانکی</string>
+    <string name="acc_type_savings">پس‌انداز</string>
+    <string name="acc_type_credit_card">کارت اعتباری</string>
+    <string name="acc_type_investment">حساب سرمایه‌گذاری</string>
+    <string name="acc_type_digital_wallet">کیف پول دیجیتال</string>
+    <string name="acc_type_other">سایر</string>
+    <string name="acc_type_liability">بدهی</string>
+    <string name="acc_type_receivable">طلب</string>
+    <string name="acc_currency">ارز</string>
+    <string name="acc_currency_locked">پس از ثبت تراکنش، ارز حساب قابل تغییر نیست.</string>
+    <string name="acc_institution">بانک / مؤسسه (اختیاری)</string>
+    <string name="acc_opening_balance">موجودی اولیه</string>
+    <string name="acc_opening_hint">موجودی در تاریخ شروع. برای موجودی منفی علامت منفی بگذارید.</string>
+    <string name="acc_start_date">تاریخ شروع</string>
+    <string name="acc_credit_limit">سقف اعتبار</string>
+    <string name="acc_icon">رنگ</string>
+    <string name="acc_include_net_worth">محاسبه در ارزش خالص</string>
+    <string name="acc_include_liquid">جزو نقدینگی قابل استفاده</string>
+    <string name="acc_include_liquid_hint">در «نقدینگی قابل استفاده» صفحه خانه نمایش داده می‌شود</string>
+    <string name="acc_archive">بایگانی</string>
+    <string name="acc_unarchive">بازگردانی</string>
+    <string name="acc_archive_confirm">حساب بایگانی‌شده تاریخچه‌اش را نگه می‌دارد ولی در فهرست‌ها و انتخابگرها نمایش داده نمی‌شود.</string>
+    <string name="acc_archived_section">حساب‌های بایگانی‌شده (%1$d)</string>
+    <string name="acc_is_archived">بایگانی‌شده</string>
+    <string name="acc_adjust">اصلاح موجودی</string>
+    <string name="acc_after_pending">پس از معلق‌ها:</string>
+    <string name="acc_available_credit">اعتبار باقی‌مانده:</string>
+
+    <!-- Categories -->
+    <string name="cat_title">دسته‌بندی‌ها</string>
+    <string name="cat_add">افزودن دسته</string>
+    <string name="cat_name">نام</string>
+    <string name="cat_parent">دسته والد</string>
+    <string name="cat_none">ندارد (سطح اول)</string>
+    <string name="cat_icon">آیکون</string>
+    <string name="cat_color">رنگ</string>
+    <string name="cat_archived">بایگانی‌شده</string>
+    <string name="cat_protected">دسته پیش‌فرض سیستم: قابل تغییر نام است ولی حذف نمی‌شود.</string>
+    <string name="cat_delete_reassign">اگر این دسته استفاده شده، تراکنش‌هایش به کدام دسته منتقل شوند؟</string>
+    <string name="category_uncategorized">بدون دسته</string>
+    <string name="category_expense_housing">مسکن و اجاره</string>
+    <string name="category_expense_food">خوراک و مواد غذایی</string>
+    <string name="category_expense_transport">حمل‌ونقل</string>
+    <string name="category_expense_utilities">قبوض و خدمات</string>
+    <string name="category_expense_internet_phone">اینترنت و تلفن</string>
+    <string name="category_expense_shopping">خریدهای شخصی</string>
+    <string name="category_expense_clothing">پوشاک</string>
+    <string name="category_expense_health">درمان و سلامت</string>
+    <string name="category_expense_leisure">ورزش و سرگرمی</string>
+    <string name="category_expense_education">آموزش</string>
+    <string name="category_expense_travel">سفر</string>
+    <string name="category_expense_subscriptions">اشتراک‌ها</string>
+    <string name="category_expense_car">هزینه‌های خودرو</string>
+    <string name="category_expense_tax_insurance">مالیات و بیمه</string>
+    <string name="category_expense_interest">بهره و کارمزد وام</string>
+    <string name="category_expense_gifts">هدایا</string>
+    <string name="category_expense_work">هزینه‌های کاری</string>
+    <string name="category_expense_fees">کارمزد بانکی</string>
+    <string name="category_expense_other">سایر هزینه‌ها</string>
+    <string name="category_income_salary">حقوق</string>
+    <string name="category_income_business">درآمد شغلی</string>
+    <string name="category_income_freelance">پروژه و فریلنس</string>
+    <string name="category_income_bonus">پاداش</string>
+    <string name="category_income_rental">درآمد اجاره</string>
+    <string name="category_income_investment">درآمد سرمایه‌گذاری</string>
+    <string name="category_income_bank_interest">سود بانکی</string>
+    <string name="category_income_gift">هدیه دریافتی</string>
+    <string name="category_income_other">سایر درآمدها</string>
+
+    <!-- Currency & rates -->
+    <string name="cur_title">ارزها</string>
+    <string name="cur_base_hint">برای انتخاب ارز پایه جمع‌ها و گزارش‌ها روی آن بزنید. ارزهایی را که استفاده نمی‌کنید خاموش کنید.</string>
+    <string name="cur_add_custom">افزودن ارز</string>
+    <string name="cur_code">کد (مثلاً USDT)</string>
+    <string name="cur_digits">تعداد رقم اعشار</string>
+    <string name="cur_digits_value">%1$d رقم اعشار</string>
+    <string name="cur_symbol">نماد</string>
+    <string name="cur_name_fa">نام فارسی</string>
+    <string name="cur_name_en">نام انگلیسی</string>
+    <string name="rate_title">نرخ‌های ارز</string>
+    <string name="rate_add">افزودن نرخ</string>
+    <string name="rate_from">از ارز</string>
+    <string name="rate_to">به ارز</string>
+    <string name="rate_value">ارزش ۱ %1$s به %2$s</string>
+    <string name="rate_date">تاریخ نرخ</string>
+    <string name="rate_empty">هنوز نرخی ثبت نشده است.</string>
+    <string name="rate_explain">نرخ‌ها را خودتان وارد می‌کنید؛ برنامه هیچ نرخی از اینترنت دریافت نمی‌کند. هر تبدیل با آخرین نرخ ثبت‌شده تا تاریخ تراکنش انجام می‌شود.</string>
+    <string name="rate_manual_note">نرخ دستی — کنار مبالغ تبدیل‌شده همین برچسب دیده می‌شود.</string>
+    <string name="rate_source_manual">دستی</string>
+    <string name="rate_source_implied">از یک انتقال</string>
+    <string name="rate_source_import">واردشده</string>
+
+    <!-- Reports -->
+    <string name="rep_month_income_expense">درآمد و هزینه</string>
+    <string name="rep_savings_rate">نرخ پس‌انداز</string>
+    <string name="rep_no_data">برای این دوره داده‌ای نیست.</string>
+
+    <!-- Settings -->
+    <string name="settings_section_data">داده‌ها</string>
+
+    <!-- Onboarding -->
+    <string name="onb_welcome_title">به MyMoney خوش آمدید</string>
+    <string name="onb_welcome_body">دفتر مالی خصوصی شما برای حساب‌ها، هزینه‌ها، بدهی‌ها، دارایی‌ها و اهداف.</string>
+    <string name="onb_privacy_note">بدون اینترنت کار می‌کند. اطلاعات شما هرگز از این گوشی خارج نمی‌شود، مگر خودتان خروجی بگیرید.</string>
+    <string name="onb_currency_title">ارز اصلی</string>
+    <string name="onb_currency_body">جمع‌ها و گزارش‌ها با این ارز نمایش داده می‌شوند. هر حساب می‌تواند ارز خودش را داشته باشد.</string>
+    <string name="onb_irr_note">مبالغ به ریال ذخیره می‌شوند؛ تومان فقط شیوه ورود و نمایش است (دقیقاً ضرب در ۱۰).</string>
+    <string name="onb_calendar_title">تقویم و ارقام</string>
+    <string name="onb_calendar_body">ماه‌های گزارش و بودجه بر اساس این تقویم است. بعداً قابل تغییر است.</string>
+    <string name="onb_first_account_title">اولین حساب شما</string>
+    <string name="onb_first_account_body">مثلاً حساب بانکی اصلی یا کیف پول نقدی.</string>
+    <string name="onb_skip_account">فعلاً رد شو</string>
+    <string name="onb_done_title">همه چیز آماده است</string>
+    <string name="onb_done_body">درآمد و هزینه را با دکمه + ثبت کنید. قفل برنامه را می‌توانید از تنظیمات فعال کنید.</string>
+    <string name="onb_start">شروع</string>
+
+    <!-- Errors -->
+    <string name="err_amount_zero">مبلغی بزرگ‌تر از صفر وارد کنید.</string>
+    <string name="err_amount_negative">مبلغ منفی در اینجا مجاز نیست.</string>
+    <string name="err_amount_positive">این مبلغ باید منفی باشد.</string>
+    <string name="err_amount_too_large">مبلغ بیش از حد بزرگ است.</string>
+    <string name="err_amount_unparsable">عدد معتبر نیست.</string>
+    <string name="err_amount_decimals">رقم اعشار برای این ارز بیش از حد مجاز است.</string>
+    <string name="err_overflow">جمع بیش از حد بزرگ است.</string>
+    <string name="err_date">تاریخ معتبری انتخاب کنید.</string>
+    <string name="err_required">لطفاً فیلدهای الزامی را پر کنید.</string>
+    <string name="err_name">نامی وارد کنید (حداکثر ۶۰ کاراکتر).</string>
+    <string name="err_not_found">این مورد دیگر وجود ندارد.</string>
+    <string name="err_missing_rate">نرخ تبدیل %1$s به %2$s ثبت نشده است.</string>
+    <string name="err_invalid_rate">یک نرخ مثبت و معتبر وارد کنید.</string>
+    <string name="err_in_use">این مورد در حال استفاده است و قابل تغییر یا حذف نیست.</string>
+    <string name="err_rule_transfer">انتقال باید بین دو حساب متفاوت باشد و در صورت هم‌ارز بودن، مبلغ دو طرف برابر باشد.</string>
+    <string name="err_rule_refund">برگشت وجه نباید از باقی‌مانده هزینه اصلی بیشتر باشد و باید هم‌ارز با آن باشد.</string>
+    <string name="err_rule_split">جمع بخش‌ها باید دقیقاً برابر مبلغ باشد (حداقل دو بخش).</string>
+    <string name="err_rule_category_type">این دسته با نوع تراکنش هم‌خوان نیست.</string>
+    <string name="err_rule_fee">کارمزد باید از یکی از دو حساب انتقال کسر شود.</string>
+    <string name="err_rule_credit_limit">سقف اعتبار نمی‌تواند منفی باشد.</string>
+    <string name="err_rule_category_tree">زیردسته فقط یک سطح عمق دارد و باید هم‌نوع با والد باشد.</string>
+    <string name="err_rule_generic">این کار یکی از قواعد حسابداری را نقض می‌کند.</string>
+</resources>

@@ -15,7 +15,7 @@ android {
         minSdk = 26
         targetSdk = 36
         versionCode = 1
-        versionName = "0.2.0"
+        versionName = "0.3.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // Galaxy A55 is arm64; x86_64 keeps emulator support. Drops ~2/3 of SQLCipher's native size.
         ndk { abiFilters += listOf("arm64-v8a", "x86_64") }
@@ -94,6 +94,9 @@ dependencies {
     testImplementation(libs.androidx.compose.ui.test.junit4)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
+    // Feature ViewModel tests run against a real in-memory Room database.
+    testImplementation(libs.androidx.room.runtime)
+    testImplementation(libs.androidx.datastore.preferences)
 
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.ext.junit)

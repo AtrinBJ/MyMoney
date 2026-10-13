@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common actions -->
+    <string name="action_apply">Apply</string>
+    <string name="action_clear">Clear</string>
+    <string name="action_confirm">OK</string>
+    <string name="action_copy">Duplicate</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_filter">Filter</string>
+    <string name="action_next">Next</string>
+    <string name="action_next_month">Next month</string>
+    <string name="action_ok">OK</string>
+    <string name="action_previous_month">Previous month</string>
+    <string name="action_quick_add">Add transaction</string>
+    <string name="action_today">Today</string>
+    <string name="action_undo">Undo</string>
+
+    <!-- Periods -->
+    <string name="period_this_month">This month</string>
+    <string name="period_last_month">Last month</string>
+    <string name="period_this_year">This year</string>
+
+    <!-- Entry kinds -->
+    <string name="kind_opening_balance">Opening balance</string>
+    <string name="kind_income">Income</string>
+    <string name="kind_expense">Expense</string>
+    <string name="kind_refund">Refund</string>
+    <string name="kind_transfer">Transfer</string>
+    <string name="kind_adjustment">Balance adjustment</string>
+    <string name="kind_asset_buy">Asset purchase</string>
+    <string name="kind_asset_sell">Asset sale</string>
+    <string name="kind_write_off">Write-off</string>
+
+    <!-- Home -->
+    <string name="home_net_worth">Net worth</string>
+    <string name="home_assets">Assets</string>
+    <string name="home_liabilities">Liabilities</string>
+    <string name="home_liquid">Available cash</string>
+    <string name="home_income">Income</string>
+    <string name="home_expense">Expenses</string>
+    <string name="home_net">Net (income − expenses)</string>
+    <string name="home_vs_previous">Arrows compare with the previous period of the same length.</string>
+    <string name="home_recent">Recent transactions</string>
+    <string name="home_see_all">See all</string>
+    <string name="home_missing_rates">No exchange rate for: %1$s. These amounts are left out of totals.</string>
+    <string name="home_approximate_rates">Some converted figures use a rate dated after the transaction (approximate).</string>
+    <string name="home_empty_title">Let\'s start with an account</string>
+    <string name="home_empty_message">Add your bank account, cash wallet or card. Everything stays on this phone.</string>
+
+    <!-- Transactions -->
+    <string name="tx_search_hint">Search…</string>
+    <string name="tx_empty_title">No transactions yet</string>
+    <string name="tx_empty_message">Tap + to record your first income or expense.</string>
+    <string name="tx_no_results_title">Nothing matches</string>
+    <string name="tx_no_results_message">Try removing some filters.</string>
+    <string name="tx_deleted">Transaction deleted</string>
+    <string name="tx_pending">Pending</string>
+    <string name="tx_split_count">Split across %1$d categories</string>
+    <string name="tx_transfer_to">%1$s → %2$s</string>
+    <string name="tx_filter_title">Filters</string>
+    <string name="tx_filter_kind">Type</string>
+    <string name="tx_filter_account">Account</string>
+    <string name="tx_filter_category">Category</string>
+    <string name="tx_filter_from">From</string>
+    <string name="tx_filter_to">To</string>
+
+    <!-- Editor -->
+    <string name="editor_title_new">New transaction</string>
+    <string name="editor_title_edit">Edit transaction</string>
+    <string name="editor_title_refund">Refund</string>
+    <string name="editor_title_adjust">Adjust balance</string>
+    <string name="editor_account">Account</string>
+    <string name="editor_from_account">From account</string>
+    <string name="editor_to_account">To account</string>
+    <string name="editor_amount">Amount</string>
+    <string name="editor_amount_sent">Amount sent</string>
+    <string name="editor_amount_received">Amount received</string>
+    <string name="editor_implied_rate">Rate obtained: 1 %1$s = %2$s %3$s</string>
+    <string name="editor_fee">Fee (optional)</string>
+    <string name="editor_fee_hint">Recorded as a separate “bank fees” expense on the source account.</string>
+    <string name="editor_category">Category</string>
+    <string name="editor_split">Split across categories</string>
+    <string name="editor_add_split">Add part</string>
+    <string name="editor_split_remaining">Unallocated: %1$s</string>
+    <string name="editor_date">Date</string>
+    <string name="editor_time">Time</string>
+    <string name="editor_more_options">More details</string>
+    <string name="editor_payee">Payee / shop</string>
+    <string name="editor_note">Note</string>
+    <string name="editor_pending">Pending (not cleared yet)</string>
+    <string name="editor_cost_type">Expense type</string>
+    <string name="editor_fixed">Fixed</string>
+    <string name="editor_variable">Variable</string>
+    <string name="editor_essential">Essential</string>
+    <string name="editor_optional">Optional</string>
+    <string name="editor_tags">Tags</string>
+    <string name="editor_new_tag">New tag</string>
+    <string name="editor_duplicate_title">Possible duplicate</string>
+    <string name="editor_duplicate_message">A transaction with the same account, amount and payee was recorded on %1$s. Save this one too?</string>
+    <string name="editor_save_anyway">Save anyway</string>
+    <string name="editor_refundable">Still refundable: %1$s</string>
+    <string name="editor_adjust_current">Balance in the app:</string>
+    <string name="editor_adjust_actual">Actual balance</string>
+    <string name="editor_adjust_reason">Reason (required)</string>
+    <string name="editor_saved">Saved</string>
+    <string name="editor_select_account">Choose an account</string>
+    <string name="editor_select_category">Choose a category</string>
+    <string name="editor_no_accounts">Create an account first (Wealth tab).</string>
+
+    <!-- Entry detail -->
+    <string name="detail_title">Transaction</string>
+    <string name="detail_missing">This transaction no longer exists.</string>
+    <string name="detail_delete_confirm">Delete this transaction? You can undo from the trash for 30 days.</string>
+    <string name="detail_delete_has_refunds">This expense has refunds. Delete the refunds first.</string>
+    <string name="detail_refunded">Refunded:</string>
+    <string name="detail_refund_action">Record a refund</string>
+    <string name="detail_created">Recorded on %1$s</string>
+
+    <!-- Accounts -->
+    <string name="acc_add">Add account</string>
+    <string name="acc_new">New account</string>
+    <string name="acc_edit">Edit account</string>
+    <string name="acc_empty_title">No accounts yet</string>
+    <string name="acc_empty_message">Accounts hold your money: bank accounts, cash, cards, foreign currency.</string>
+    <string name="acc_name">Account name</string>
+    <string name="acc_type">Type</string>
+    <string name="acc_type_cash">Cash</string>
+    <string name="acc_type_bank">Bank account</string>
+    <string name="acc_type_savings">Savings</string>
+    <string name="acc_type_credit_card">Credit card</string>
+    <string name="acc_type_investment">Investment cash</string>
+    <string name="acc_type_digital_wallet">Digital wallet</string>
+    <string name="acc_type_other">Other</string>
+    <string name="acc_type_liability">Debt</string>
+    <string name="acc_type_receivable">Receivable</string>
+    <string name="acc_currency">Currency</string>
+    <string name="acc_currency_locked">Currency can\'t change after transactions are recorded.</string>
+    <string name="acc_institution">Bank / institution (optional)</string>
+    <string name="acc_opening_balance">Opening balance</string>
+    <string name="acc_opening_hint">Balance on the start date. Use a minus sign for a negative balance.</string>
+    <string name="acc_start_date">Start date</string>
+    <string name="acc_credit_limit">Credit limit</string>
+    <string name="acc_icon">Color</string>
+    <string name="acc_include_net_worth">Include in net worth</string>
+    <string name="acc_include_liquid">Counts as available cash</string>
+    <string name="acc_include_liquid_hint">Shown in “available cash” on the home screen</string>
+    <string name="acc_archive">Archive</string>
+    <string name="acc_unarchive">Restore</string>
+    <string name="acc_archive_confirm">Archived accounts keep their history but are hidden from lists and pickers.</string>
+    <string name="acc_archived_section">Archived accounts (%1$d)</string>
+    <string name="acc_is_archived">Archived</string>
+    <string name="acc_adjust">Adjust balance</string>
+    <string name="acc_after_pending">After pending:</string>
+    <string name="acc_available_credit">Available credit:</string>
+
+    <!-- Categories -->
+    <string name="cat_title">Categories</string>
+    <string name="cat_add">Add category</string>
+    <string name="cat_name">Name</string>
+    <string name="cat_parent">Parent category</string>
+    <string name="cat_none">None (top level)</string>
+    <string name="cat_icon">Icon</string>
+    <string name="cat_color">Color</string>
+    <string name="cat_archived">Archived</string>
+    <string name="cat_protected">Built-in category: it can be renamed but not deleted.</string>
+    <string name="cat_delete_reassign">If this category is used, choose where its transactions should move:</string>
+    <string name="category_uncategorized">Uncategorized</string>
+    <string name="category_expense_housing">Housing &amp; rent</string>
+    <string name="category_expense_food">Food &amp; groceries</string>
+    <string name="category_expense_transport">Transport</string>
+    <string name="category_expense_utilities">Bills &amp; utilities</string>
+    <string name="category_expense_internet_phone">Internet &amp; phone</string>
+    <string name="category_expense_shopping">Personal shopping</string>
+    <string name="category_expense_clothing">Clothing</string>
+    <string name="category_expense_health">Health &amp; medical</string>
+    <string name="category_expense_leisure">Sport &amp; leisure</string>
+    <string name="category_expense_education">Education</string>
+    <string name="category_expense_travel">Travel</string>
+    <string name="category_expense_subscriptions">Subscriptions</string>
+    <string name="category_expense_car">Car</string>
+    <string name="category_expense_tax_insurance">Tax &amp; insurance</string>
+    <string name="category_expense_interest">Loan interest &amp; fees</string>
+    <string name="category_expense_gifts">Gifts</string>
+    <string name="category_expense_work">Work expenses</string>
+    <string name="category_expense_fees">Bank fees</string>
+    <string name="category_expense_other">Other expenses</string>
+    <string name="category_income_salary">Salary</string>
+    <string name="category_income_business">Business income</string>
+    <string name="category_income_freelance">Freelance &amp; projects</string>
+    <string name="category_income_bonus">Bonus</string>
+    <string name="category_income_rental">Rental income</string>
+    <string name="category_income_investment">Investment income</string>
+    <string name="category_income_bank_interest">Bank interest</string>
+    <string name="category_income_gift">Gifts received</string>
+    <string name="category_income_other">Other income</string>
+
+    <!-- Currency & rates -->
+    <string name="cur_title">Currencies</string>
+    <string name="cur_base_hint">Tap a currency to make it the base currency for totals and reports. Switch off currencies you don\'t use.</string>
+    <string name="cur_add_custom">Add currency</string>
+    <string name="cur_code">Code (e.g. USDT)</string>
+    <string name="cur_digits">Decimal places</string>
+    <string name="cur_digits_value">%1$d decimals</string>
+    <string name="cur_symbol">Symbol</string>
+    <string name="cur_name_fa">Persian name</string>
+    <string name="cur_name_en">English name</string>
+    <string name="rate_title">Exchange rates</string>
+    <string name="rate_add">Add rate</string>
+    <string name="rate_from">From</string>
+    <string name="rate_to">To</string>
+    <string name="rate_value">Value of 1 %1$s in %2$s</string>
+    <string name="rate_date">Rate date</string>
+    <string name="rate_empty">No rates yet.</string>
+    <string name="rate_explain">Rates are entered by you; the app never downloads them. Each conversion uses the latest rate on or before the transaction date.</string>
+    <string name="rate_manual_note">Manual rate — shown as such next to converted amounts.</string>
+    <string name="rate_source_manual">Manual</string>
+    <string name="rate_source_implied">From a transfer</string>
+    <string name="rate_source_import">Imported</string>
+
+    <!-- Reports -->
+    <string name="rep_month_income_expense">Income &amp; expenses</string>
+    <string name="rep_savings_rate">Savings rate</string>
+    <string name="rep_no_data">No data for this period.</string>
+
+    <!-- Settings -->
+    <string name="settings_section_data">Data</string>
+
+    <!-- Onboarding -->
+    <string name="onb_welcome_title">Welcome to MyMoney</string>
+    <string name="onb_welcome_body">A private ledger for your accounts, spending, debts, assets and goals.</string>
+    <string name="onb_privacy_note">Works offline. Your data never leaves this phone unless you export it.</string>
+    <string name="onb_currency_title">Main currency</string>
+    <string name="onb_currency_body">Totals and reports are shown in this currency. Each account can still use its own currency.</string>
+    <string name="onb_irr_note">Amounts are stored in rial; toman is just how you type and read them (×10, exact).</string>
+    <string name="onb_calendar_title">Calendar and digits</string>
+    <string name="onb_calendar_body">Months in reports and budgets follow this calendar. You can change it later.</string>
+    <string name="onb_first_account_title">Your first account</string>
+    <string name="onb_first_account_body">For example your main bank account or your cash wallet.</string>
+    <string name="onb_skip_account">Skip for now</string>
+    <string name="onb_done_title">All set</string>
+    <string name="onb_done_body">Record income and expenses with the + button. You can turn on the app lock in Settings.</string>
+    <string name="onb_start">Start</string>
+
+    <!-- Errors -->
+    <string name="err_amount_zero">Enter an amount greater than zero.</string>
+    <string name="err_amount_negative">A negative amount isn\'t allowed here.</string>
+    <string name="err_amount_positive">This amount must be negative.</string>
+    <string name="err_amount_too_large">The amount is too large.</string>
+    <string name="err_amount_unparsable">That doesn\'t look like a number.</string>
+    <string name="err_amount_decimals">Too many decimal places for this currency.</string>
+    <string name="err_overflow">The total is too large to calculate.</string>
+    <string name="err_date">Choose a valid date.</string>
+    <string name="err_required">Please fill in the required fields.</string>
+    <string name="err_name">Enter a name (up to 60 characters).</string>
+    <string name="err_not_found">The item no longer exists.</string>
+    <string name="err_missing_rate">No exchange rate from %1$s to %2$s.</string>
+    <string name="err_invalid_rate">Enter a valid positive rate.</string>
+    <string name="err_in_use">This is in use and can\'t be changed or removed.</string>
+    <string name="err_rule_transfer">A transfer needs two different accounts, and equal amounts when both use the same currency.</string>
+    <string name="err_rule_refund">A refund can\'t exceed what\'s left of the original expense and must use the same currency.</string>
+    <string name="err_rule_split">Split parts must add up exactly to the amount (at least two parts).</string>
+    <string name="err_rule_category_type">This category doesn\'t match the transaction type.</string>
+    <string name="err_rule_fee">The fee must be charged to one of the two accounts.</string>
+    <string name="err_rule_credit_limit">The credit limit can\'t be negative.</string>
+    <string name="err_rule_category_tree">Subcategories can only go one level deep, under a category of the same type.</string>
+    <string name="err_rule_generic">This would break a bookkeeping rule.</string>
+</resources>

@@ -7,6 +7,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.foundation.clickable
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,15 +34,29 @@ import com.mymoney.core.domain.settings.ThemeMode
 import com.mymoney.core.domain.settings.WeekStart
 
 @Composable
-fun SettingsScreen(onBack: () -> Unit, viewModel: SettingsViewModel = hiltViewModel()) {
+fun SettingsScreen(
+    onBack: () -> Unit,
+    onOpenCategories: () -> Unit,
+    onOpenCurrencies: () -> Unit,
+    onOpenRates: () -> Unit,
+    viewModel: SettingsViewModel = hiltViewModel(),
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     SettingsContent(
         state = state,
         onBack = onBack,
         onLanguage = viewModel::setLanguage,
         onUpdate = viewModel::update,
+        links = SettingsLinks(onOpenCategories, onOpenCurrencies, onOpenRates),
     )
 }
+
+/** Navigation entries shown in settings; empty lambdas in previews/tests. */
+data class SettingsLinks(
+    val categories: () -> Unit = {},
+    val currencies: () -> Unit = {},
+    val rates: () -> Unit = {},
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,6 +65,7 @@ internal fun SettingsContent(
     onBack: () -> Unit,
     onLanguage: (AppLanguage) -> Unit,
     onUpdate: ((AppSettings) -> AppSettings) -> Unit,
+    links: SettingsLinks = SettingsLinks(),
 ) {
     Scaffold(
         topBar = {
@@ -146,6 +163,11 @@ internal fun SettingsContent(
                 enabled = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S,
             )
 
+            SectionHeader(stringResource(R.string.settings_section_data))
+            LinkRow(stringResource(R.string.cat_title), links.categories)
+            LinkRow(stringResource(R.string.cur_title), links.currencies)
+            LinkRow(stringResource(R.string.rate_title), links.rates)
+
             SectionHeader(stringResource(R.string.settings_section_currency))
             ChoiceRow(
                 title = stringResource(R.string.settings_irr_unit),
@@ -175,4 +197,13 @@ internal fun SettingsContent(
             )
         }
     }
+}
+
+@Composable
+private fun LinkRow(title: String, onClick: () -> Unit) {
+    androidx.compose.material3.ListItem(
+        headlineContent = { Text(title) },
+        trailingContent = { Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null) },
+        modifier = Modifier.clickable(onClick = onClick),
+    )
 }

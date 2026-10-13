@@ -24,4 +24,10 @@ interface CurrencyDao {
 
     @Update
     suspend fun update(currency: CurrencyEntity)
+
+    @Query(
+        """SELECT (SELECT COUNT(*) FROM account WHERE currencyCode = :code)
+                + (SELECT COUNT(*) FROM exchange_rate WHERE baseCode = :code OR quoteCode = :code)""",
+    )
+    suspend fun usageCount(code: String): Int
 }
