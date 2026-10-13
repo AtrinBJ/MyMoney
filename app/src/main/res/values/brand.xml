@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand name: change here (and values-fa/brand.xml) to rebrand. -->
+    <string name="app_name" translatable="false">MyMoney</string>
+</resources>

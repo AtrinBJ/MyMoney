@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Top-level destinations -->
+    <string name="nav_home">Home</string>
+    <string name="nav_transactions">Transactions</string>
+    <string name="nav_planning">Planning</string>
+    <string name="nav_wealth">Wealth</string>
+    <string name="nav_reports">Reports</string>
+
+    <!-- Common -->
+    <string name="action_settings">Settings</string>
+    <string name="action_search">Search</string>
+    <string name="action_add">Add</string>
+    <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_retry">Try again</string>
+    <string name="action_back">Back</string>
+    <string name="action_hide_amounts">Hide amounts</string>
+    <string name="action_show_amounts">Show amounts</string>
+    <string name="state_error_generic">Something went wrong. Your data is safe.</string>
+    <string name="state_coming_next">This section is being built in the next development stage.</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_section_general">General</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_language_fa">فارسی</string>
+    <string name="settings_language_en">English</string>
+    <string name="settings_calendar">Calendar</string>
+    <string name="settings_calendar_jalali">Solar Hijri (Jalali)</string>
+    <string name="settings_calendar_gregorian">Gregorian</string>
+    <string name="settings_digits">Digits</string>
+    <string name="settings_digits_persian">Persian (۱۲۳)</string>
+    <string name="settings_digits_latin">Latin (123)</string>
+    <string name="settings_week_start">First day of week</string>
+    <string name="settings_week_saturday">Saturday</string>
+    <string name="settings_week_sunday">Sunday</string>
+    <string name="settings_week_monday">Monday</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_theme_system">System default</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_dynamic_color">Use wallpaper colors</string>
+    <string name="settings_dynamic_color_desc">Material You colors from your wallpaper (Android 12+)</string>
+    <string name="settings_section_privacy">Privacy</string>
+    <string name="settings_secure_screen">Block screenshots</string>
+    <string name="settings_secure_screen_desc">Hides app content from screenshots and the recent-apps preview</string>
+    <string name="settings_hide_on_start">Start with amounts hidden</string>
+    <string name="settings_section_currency">Currency</string>
+    <string name="settings_irr_unit">Iranian amounts shown in</string>
+    <string name="settings_irr_unit_toman">Toman</string>
+    <string name="settings_irr_unit_rial">Rial</string>
+</resources>

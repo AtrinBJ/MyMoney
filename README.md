@@ -19,8 +19,8 @@
 | [docs/08-decisions-and-risks.md](docs/08-decisions-and-risks.md) | تصمیم‌های طراحی و ریسک‌ها |
 | [docs/FEATURES_STATUS.md](docs/FEATURES_STATUS.md) | قابلیت‌های تکمیل‌شده و باقی‌مانده |
 
-راهنمای ساخت (`BUILD.md`)، امنیت (`SECURITY.md`)، پشتیبان‌گیری (`BACKUP_RESTORE.md`) و چک‌لیست کیفیت (`QA_CHECKLIST.md`) در مراحل بعد اضافه می‌شوند.
+راهنمای ساخت: [BUILD.md](BUILD.md). امنیت (`SECURITY.md`)، پشتیبان‌گیری (`BACKUP_RESTORE.md`) و چک‌لیست کیفیت (`QA_CHECKLIST.md`) در مراحل بعد اضافه می‌شوند.
 
 ## مجوزهای شخص ثالث
-- فونت Vazirmatn — SIL Open Font License 1.1 (`core/designsystem/src/main/res/font/OFL.txt`)
+- فونت Vazirmatn — SIL Open Font License 1.1 (`core/designsystem/src/main/assets/licenses/Vazirmatn-OFL.txt`)
 - الگوریتم تبدیل تقویم جلالی برگرفته از jalaali-js — MIT

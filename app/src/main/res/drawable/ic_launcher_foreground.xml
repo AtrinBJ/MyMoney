@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Brand mark: three rising bars over a baseline (replaceable; see docs/06-design-system.md §6.9). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M34,62h8a2,2 0,0 1,2 2v8h-12v-8a2,2 0,0 1,2 -2z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M50,50h8a2,2 0,0 1,2 2v20h-12v-20a2,2 0,0 1,2 -2z" />
+    <path
+        android:fillColor="#FFF5BD48"
+        android:pathData="M66,36h8a2,2 0,0 1,2 2v34h-12v-34a2,2 0,0 1,2 -2z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M30,74h48v3h-48z" />
+</vector>

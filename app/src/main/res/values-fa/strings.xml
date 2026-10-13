@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Top-level destinations -->
+    <string name="nav_home">خانه</string>
+    <string name="nav_transactions">تراکنش‌ها</string>
+    <string name="nav_planning">برنامه‌ریزی</string>
+    <string name="nav_wealth">دارایی‌ها</string>
+    <string name="nav_reports">گزارش‌ها</string>
+
+    <!-- Common -->
+    <string name="action_settings">تنظیمات</string>
+    <string name="action_search">جست‌وجو</string>
+    <string name="action_add">افزودن</string>
+    <string name="action_save">ذخیره</string>
+    <string name="action_cancel">انصراف</string>
+    <string name="action_delete">حذف</string>
+    <string name="action_retry">تلاش دوباره</string>
+    <string name="action_back">بازگشت</string>
+    <string name="action_hide_amounts">مخفی کردن مبالغ</string>
+    <string name="action_show_amounts">نمایش مبالغ</string>
+    <string name="state_error_generic">مشکلی پیش آمد. اطلاعات شما سالم است.</string>
+    <string name="state_coming_next">این بخش در مرحله بعدی توسعه ساخته می‌شود.</string>
+
+    <!-- Settings -->
+    <string name="settings_title">تنظیمات</string>
+    <string name="settings_section_general">عمومی</string>
+    <string name="settings_language">زبان</string>
+    <string name="settings_language_fa">فارسی</string>
+    <string name="settings_language_en">English</string>
+    <string name="settings_calendar">تقویم</string>
+    <string name="settings_calendar_jalali">هجری شمسی</string>
+    <string name="settings_calendar_gregorian">میلادی</string>
+    <string name="settings_digits">ارقام</string>
+    <string name="settings_digits_persian">فارسی (۱۲۳)</string>
+    <string name="settings_digits_latin">لاتین (123)</string>
+    <string name="settings_week_start">اولین روز هفته</string>
+    <string name="settings_week_saturday">شنبه</string>
+    <string name="settings_week_sunday">یکشنبه</string>
+    <string name="settings_week_monday">دوشنبه</string>
+    <string name="settings_theme">پوسته</string>
+    <string name="settings_theme_system">پیش‌فرض سیستم</string>
+    <string name="settings_theme_light">روشن</string>
+    <string name="settings_theme_dark">تیره</string>
+    <string name="settings_dynamic_color">رنگ‌های والپیپر</string>
+    <string name="settings_dynamic_color_desc">رنگ‌بندی Material You بر اساس والپیپر (اندروید ۱۲ به بالا)</string>
+    <string name="settings_section_privacy">حریم خصوصی</string>
+    <string name="settings_secure_screen">جلوگیری از اسکرین‌شات</string>
+    <string name="settings_secure_screen_desc">محتوای برنامه در اسکرین‌شات و پیش‌نمایش برنامه‌های اخیر دیده نمی‌شود</string>
+    <string name="settings_hide_on_start">شروع با مبالغ مخفی</string>
+    <string name="settings_section_currency">ارز</string>
+    <string name="settings_irr_unit">نمایش مبالغ ایرانی به</string>
+    <string name="settings_irr_unit_toman">تومان</string>
+    <string name="settings_irr_unit_rial">ریال</string>
+</resources>

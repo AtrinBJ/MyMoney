@@ -80,4 +80,4 @@
 TalkBack: هر ردیف تراکنش یک توضیح کامل (نوع، مبلغ، دسته، تاریخ). نمودارها خلاصه متنی. پشتیبانی font scale تا ۲۰۰٪ (طراحی بدون ارتفاع ثابت متن). ترتیب فوکوس منطقی. هدف لمسی ≥ ۴۸dp.
 
 ## ۶.۹ برندینگ قابل تغییر
-همه موارد برند در: `core/designsystem/.../theme/BrandPalette.kt` (رنگ‌ها)، `app/src/main/res/values/brand.xml` و `values-fa/brand.xml` (نام برنامه)، `app/src/main/res/drawable/ic_launcher_foreground.xml` (لوگو)، `res/font/` (فونت). `applicationId` (`com.mymoney.app`) پس از انتشار عمومی قابل تغییر نیست.
+همه موارد برند در: `core/designsystem/.../theme/BrandPalette.kt` (رنگ‌ها)، `app/src/main/res/values/brand.xml` (نام برنامه)، `app/src/main/res/drawable/ic_launcher_foreground.xml` (لوگو)، `res/font/` (فونت). `applicationId` (`com.mymoney.app`) پس از انتشار عمومی قابل تغییر نیست.
