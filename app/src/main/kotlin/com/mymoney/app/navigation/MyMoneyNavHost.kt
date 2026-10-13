@@ -1,7 +1,6 @@
 package com.mymoney.app.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -17,7 +16,14 @@ import com.mymoney.app.feature.categories.CategoriesScreen
 import com.mymoney.app.feature.currency.CurrenciesScreen
 import com.mymoney.app.feature.currency.RatesScreen
 import com.mymoney.app.feature.dashboard.DashboardScreen
-import com.mymoney.app.feature.placeholder.ComingNextScreen
+import com.mymoney.app.feature.planning.BudgetEditorScreen
+import com.mymoney.app.feature.planning.GoalDetailScreen
+import com.mymoney.app.feature.planning.GoalEditorScreen
+import com.mymoney.app.feature.planning.PlanningScreen
+import com.mymoney.app.feature.planning.RuleEditorScreen
+import com.mymoney.app.feature.planning.RulesScreen
+import com.mymoney.app.feature.planning.SubscriptionsScreen
+import com.mymoney.app.feature.planning.ToolsScreen
 import com.mymoney.app.feature.reports.MonthlyReportScreen
 import com.mymoney.app.feature.settings.SettingsScreen
 import com.mymoney.app.feature.transactions.EntryDetailScreen
@@ -56,7 +62,18 @@ fun MyMoneyNavHost(
             }
         }
         navigation<PlanningGraph>(startDestination = PlanningRoute) {
-            composable<PlanningRoute> { ComingNextScreen(Modifier.padding(contentPadding)) }
+            composable<PlanningRoute> {
+                PlanningScreen(
+                    contentPadding = contentPadding,
+                    onOpenBudget = { navController.navigate(BudgetEditorRoute(it)) },
+                    onOpenRules = { navController.navigate(RulesRoute) },
+                    onOpenRule = { navController.navigate(RuleEditorRoute(ruleId = it)) },
+                    onOpenSubscriptions = { navController.navigate(SubscriptionsRoute) },
+                    onOpenGoal = { navController.navigate(GoalDetailRoute(it)) },
+                    onNewGoal = { navController.navigate(GoalEditorRoute()) },
+                    onOpenTools = { navController.navigate(ToolsRoute) },
+                )
+            }
         }
         navigation<WealthGraph>(startDestination = WealthRoute) {
             composable<WealthRoute> {
@@ -103,5 +120,14 @@ fun MyMoneyNavHost(
             )
         }
         composable<AccountEditorRoute> { AccountEditorScreen(onDone = { back() }) }
+        composable<BudgetEditorRoute> { BudgetEditorScreen(onDone = back) }
+        composable<RulesRoute> { RulesScreen(onBack = back, onOpenRule = { navController.navigate(RuleEditorRoute(ruleId = it)) }) }
+        composable<RuleEditorRoute> { RuleEditorScreen(onDone = back) }
+        composable<SubscriptionsRoute> {
+            SubscriptionsScreen(onBack = back, onOpenRule = { navController.navigate(if (it == null) RuleEditorRoute(kind = "SUBSCRIPTION") else RuleEditorRoute(ruleId = it)) })
+        }
+        composable<GoalDetailRoute> { GoalDetailScreen(onBack = back, onEdit = { navController.navigate(GoalEditorRoute(it)) }) }
+        composable<GoalEditorRoute> { GoalEditorScreen(onDone = back) }
+        composable<ToolsRoute> { ToolsScreen(onBack = back) }
     }
 }
