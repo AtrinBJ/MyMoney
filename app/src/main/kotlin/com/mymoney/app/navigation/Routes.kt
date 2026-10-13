@@ -67,6 +67,13 @@ data class EntryEditorRoute(
 @Serializable data class ObligationEditorRoute(val receivable: Boolean = false)
 @Serializable data class ObligationDetailRoute(val accountId: String)
 
+// Reports
+@Serializable data class ReportDetailRoute(val type: String)
+@Serializable data object CategoryReportRoute
+@Serializable data object InsightsRoute
+@Serializable data object SearchRoute
+@Serializable data object DataHealthRoute
+
 enum class TopLevelDestination(
     val graph: Any,
     val startRoute: KClass<*>,

@@ -72,6 +72,18 @@ class ScreenshotHarness {
     val settings = DataStoreSettingsRepository(prefs)
     val queries = EntryQueries(db)
     val record = RecordOperationUseCase(accounts, categories, currencies, ledger, rates, ids, clock)
+    val budgets = com.mymoney.core.data.repository.BudgetRepositoryImpl(db, ids, clock)
+    val recurring = com.mymoney.core.data.repository.RecurringRepositoryImpl(db, ids, clock)
+    val obligations = com.mymoney.core.data.repository.ObligationRepositoryImpl(db)
+    val assets = com.mymoney.core.data.repository.AssetRepositoryImpl(db, clock)
+    val goals = com.mymoney.core.data.repository.GoalRepositoryImpl(db, ids, clock)
+    val notificationLog = com.mymoney.core.data.repository.NotificationLogRepositoryImpl(db)
+    val analytics = com.mymoney.core.data.repository.LedgerAnalyticsImpl(db)
+    val tx = com.mymoney.core.data.repository.RoomTransactionRunner(db)
+    val payOccurrence = com.mymoney.core.domain.usecase.PayOccurrenceUseCase(recurring, record, tx, clock)
+    val provider = com.mymoney.app.data.FinanceSnapshotProvider(
+        settings, currencies, rates, accounts, categories, budgets, recurring, obligations, assets, goals, clock,
+    )
 
     fun formats(language: AppLanguage, settings: AppSettings = AppSettings.defaultsFor(language)): Formats = runBlocking {
         Formats(settings, language, currencies.getAll().associateBy { it.code })

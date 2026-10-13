@@ -30,7 +30,20 @@ import com.mymoney.app.feature.planning.RuleEditorScreen
 import com.mymoney.app.feature.planning.RulesScreen
 import com.mymoney.app.feature.planning.SubscriptionsScreen
 import com.mymoney.app.feature.planning.ToolsScreen
+import com.mymoney.app.feature.reports.InsightTarget
+import com.mymoney.app.feature.search.SearchHit
+import com.mymoney.app.feature.search.SearchScreen
+import com.mymoney.app.feature.datahealth.DataHealthScreen
+import com.mymoney.app.feature.datahealth.HealthAction
+import com.mymoney.app.feature.reports.InsightsScreen
 import com.mymoney.app.feature.reports.MonthlyReportScreen
+import com.mymoney.app.feature.reports.ReportDetailScreen
+import com.mymoney.app.feature.reports.ReportType
+import com.mymoney.app.feature.reports.ReportsHomeScreen
+import com.mymoney.app.ui.common.BackTopBar
+import com.mymoney.app.R
+import androidx.compose.material3.Scaffold
+import androidx.compose.ui.res.stringResource
 import com.mymoney.app.feature.settings.SettingsScreen
 import com.mymoney.app.feature.transactions.EntryDetailScreen
 import com.mymoney.app.feature.transactions.EntryEditorScreen
@@ -59,6 +72,8 @@ fun MyMoneyNavHost(
                     onOpenWealth = { navController.navigateToTab(TopLevelDestination.WEALTH) },
                     onOpenReports = { navController.navigateToTab(TopLevelDestination.REPORTS) },
                     onOpenRates = { navController.navigate(RatesRoute) },
+                    onOpenPlanning = { navController.navigateToTab(TopLevelDestination.PLANNING) },
+                    onOpenInsights = { navController.navigate(InsightsRoute) },
                 )
             }
         }
@@ -96,7 +111,11 @@ fun MyMoneyNavHost(
         }
         navigation<ReportsGraph>(startDestination = ReportsRoute) {
             composable<ReportsRoute> {
-                MonthlyReportScreen(contentPadding = contentPadding, onOpenRates = { navController.navigate(RatesRoute) })
+                ReportsHomeScreen(
+                    contentPadding = contentPadding,
+                    onOpenReport = { navController.navigate(if (it == ReportType.CATEGORIES) CategoryReportRoute else ReportDetailRoute(it.name)) },
+                    onOpenInsights = { navController.navigate(InsightsRoute) },
+                )
             }
         }
 
@@ -106,7 +125,32 @@ fun MyMoneyNavHost(
                 onOpenCategories = { navController.navigate(CategoriesRoute) },
                 onOpenCurrencies = { navController.navigate(CurrenciesRoute) },
                 onOpenRates = { navController.navigate(RatesRoute) },
+                onOpenDataHealth = { navController.navigate(DataHealthRoute) },
             )
+        }
+        composable<SearchRoute> {
+            SearchScreen(onBack = back, onOpenEntry = openEntry, onOpenHit = { h ->
+                when (h.kind) {
+                    SearchHit.Kind.ACCOUNT -> navController.navigate(AccountDetailRoute(h.id))
+                    SearchHit.Kind.RULE -> navController.navigate(RuleEditorRoute(ruleId = h.id))
+                    SearchHit.Kind.ASSET -> navController.navigate(AssetDetailRoute(h.id))
+                    SearchHit.Kind.GOAL -> navController.navigate(GoalDetailRoute(h.id))
+                    SearchHit.Kind.OBLIGATION -> navController.navigate(ObligationDetailRoute(h.id))
+                }
+            })
+        }
+        composable<DataHealthRoute> {
+            DataHealthScreen(onBack = back, onAction = { action, id ->
+                when (action) {
+                    HealthAction.RATES -> navController.navigate(RatesRoute)
+                    HealthAction.ACCOUNT -> id?.let { navController.navigate(AccountDetailRoute(it)) }
+                    HealthAction.TRANSACTIONS -> navController.navigateToTab(TopLevelDestination.TRANSACTIONS)
+                    HealthAction.PLANNING -> navController.navigateToTab(TopLevelDestination.PLANNING)
+                    HealthAction.OBLIGATION -> id?.let { navController.navigate(ObligationDetailRoute(it)) }
+                    HealthAction.ASSET -> id?.let { navController.navigate(AssetDetailRoute(it)) }
+                    HealthAction.NONE -> Unit
+                }
+            })
         }
         composable<CategoriesRoute> { CategoriesScreen(onBack = back) }
         composable<CurrenciesRoute> { CurrenciesScreen(onBack = back, onOpenRates = { navController.navigate(RatesRoute) }) }
@@ -138,6 +182,23 @@ fun MyMoneyNavHost(
         composable<GoalDetailRoute> { GoalDetailScreen(onBack = back, onEdit = { navController.navigate(GoalEditorRoute(it)) }) }
         composable<GoalEditorRoute> { GoalEditorScreen(onDone = back) }
         composable<ToolsRoute> { ToolsScreen(onBack = back) }
+        composable<ReportDetailRoute> { ReportDetailScreen(onBack = back, onOpenRates = { navController.navigate(RatesRoute) }) }
+        composable<CategoryReportRoute> {
+            Scaffold(topBar = { BackTopBar(stringResource(R.string.rpt_categories), back) }) { p ->
+                MonthlyReportScreen(contentPadding = p, onOpenRates = { navController.navigate(RatesRoute) })
+            }
+        }
+        composable<InsightsRoute> {
+            InsightsScreen(onBack = back, onOpen = { t ->
+                when (t) {
+                    is InsightTarget.Budget -> navController.navigate(BudgetEditorRoute(t.id))
+                    is InsightTarget.Asset -> navController.navigate(AssetDetailRoute(t.id))
+                    InsightTarget.Rules -> navController.navigate(RulesRoute)
+                    InsightTarget.Subscriptions -> navController.navigate(SubscriptionsRoute)
+                    InsightTarget.Categories -> navController.navigate(CategoryReportRoute)
+                }
+            })
+        }
         composable<AssetEditorRoute> { AssetEditorScreen(onDone = back) }
         composable<AssetDetailRoute> { AssetDetailScreen(onBack = back, onEdit = { navController.navigate(AssetEditorRoute(it)) }) }
         composable<ObligationsRoute> { entry ->

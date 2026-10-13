@@ -156,14 +156,14 @@ fun DueRow(o: Occurrence, onPay: () -> Unit, onSkip: () -> Unit) {
 }
 
 @Composable
-private fun BudgetRow(b: BudgetStatus, onClick: () -> Unit) {
+internal fun BudgetRow(b: BudgetStatus, onClick: (() -> Unit)? = null) {
     val formats = LocalFormats.current
-    Column(Modifier.fillMaxWidth().clickable(onClick = onClick).padding(vertical = 8.dp)) {
+    Column(Modifier.fillMaxWidth().then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier).padding(vertical = 8.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(b.budget.name, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
-            MoneyText(b.usedMinor, b.budget.currency, style = MaterialTheme.typography.bodyMedium)
+            MoneyText(b.usedMinor, b.budget.currency, style = MaterialTheme.typography.bodyMedium, withCurrency = false)
             Text(" / ", style = MaterialTheme.typography.bodyMedium)
-            MoneyText(b.limitMinor, b.budget.currency, style = MaterialTheme.typography.bodyMedium, withCurrency = false)
+            MoneyText(b.limitMinor, b.budget.currency, style = MaterialTheme.typography.bodyMedium)
         }
         ProgressBar(b.fraction, Modifier.padding(vertical = 4.dp))
         Row {
@@ -187,9 +187,9 @@ fun GoalRow(g: GoalProgress, onClick: () -> Unit) {
     Column(Modifier.fillMaxWidth().clickable(onClick = onClick).padding(vertical = 8.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(g.goal.name, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
-            MoneyText(g.currentMinor, g.goal.currency, style = MaterialTheme.typography.bodyMedium)
+            MoneyText(g.currentMinor, g.goal.currency, style = MaterialTheme.typography.bodyMedium, withCurrency = false)
             Text(" / ", style = MaterialTheme.typography.bodyMedium)
-            MoneyText(g.goal.targetMinor, g.goal.currency, style = MaterialTheme.typography.bodyMedium, withCurrency = false)
+            MoneyText(g.goal.targetMinor, g.goal.currency, style = MaterialTheme.typography.bodyMedium)
         }
         ProgressBar(g.fraction, Modifier.padding(vertical = 4.dp), warnAt = 2f)
         g.requiredPerMonthMinor?.let {

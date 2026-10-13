@@ -3,6 +3,7 @@ package com.mymoney.app.ui
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
@@ -36,6 +37,7 @@ import com.mymoney.app.feature.onboarding.OnboardingScreen
 import com.mymoney.app.navigation.AccountEditorRoute
 import com.mymoney.app.navigation.EntryEditorRoute
 import com.mymoney.app.navigation.MyMoneyNavHost
+import com.mymoney.app.navigation.SearchRoute
 import com.mymoney.app.navigation.SettingsRoute
 import com.mymoney.app.navigation.TopLevelDestination
 import com.mymoney.app.navigation.navigateToTab
@@ -79,6 +81,9 @@ private fun MainScaffold(
                         }
                     },
                     actions = {
+                        IconButton(onClick = { navController.navigate(SearchRoute) }) {
+                            Icon(Icons.Outlined.Search, contentDescription = stringResource(R.string.action_search))
+                        }
                         IconButton(onClick = { navController.navigate(SettingsRoute) }) {
                             Icon(Icons.Outlined.Settings, contentDescription = stringResource(R.string.action_settings))
                         }

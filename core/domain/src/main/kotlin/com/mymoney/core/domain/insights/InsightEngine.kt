@@ -73,21 +73,18 @@ data class InsightInputs(
 object InsightEngine {
     fun compute(i: InsightInputs): List<Insight> {
         val out = mutableListOf<Insight>()
-        val cur = i.currentMonth
 
-        // Category spikes: current month normalized to a full month vs the 3-month average.
-        if (cur != null && i.pastMonths.size >= 3) {
-            val (range, st) = cur
-            val elapsed = (i.today.toEpochDay() - range.startEpochDay + 1).coerceIn(1, range.lengthInDays)
-            val scale = range.lengthInDays.toDouble() / elapsed
-            val last3 = i.pastMonths.takeLast(3).map { it.second }
-            val avgTotal = last3.map { it.expenseMinor }.average()
-            st.byCategory.forEach { (cat, total) ->
-                if (elapsed < 10) return@forEach // too early in the month for a fair comparison
-                val currentNormalized = (total.netExpenseMinor * scale).toLong()
-                val avg = last3.map { it.byCategory[cat]?.netExpenseMinor ?: 0 }.average()
-                if (avg > 0 && currentNormalized > avg * 1.3 && (currentNormalized - avg) >= avgTotal * 0.05) {
-                    out += Insight.CategorySpike(cat, currentNormalized, avg.toLong(), ((currentNormalized / avg - 1) * 100).toInt())
+        // Category spikes: the last complete month vs the average of the 3 months before it.
+        // Complete months only: extrapolating a partial month would inflate lump sums such as rent.
+        if (i.pastMonths.size >= 4) {
+            val (_, last) = i.pastMonths.last()
+            val baseline = i.pastMonths.dropLast(1).takeLast(3).map { it.second }
+            val avgTotal = baseline.map { it.expenseMinor }.average()
+            last.byCategory.forEach { (cat, total) ->
+                val current = total.netExpenseMinor
+                val avg = baseline.map { it.byCategory[cat]?.netExpenseMinor ?: 0 }.average()
+                if (avg > 0 && current > avg * 1.3 && (current - avg) >= avgTotal * 0.05) {
+                    out += Insight.CategorySpike(cat, current, avg.toLong(), ((current / avg - 1) * 100).toInt())
                 }
             }
         }

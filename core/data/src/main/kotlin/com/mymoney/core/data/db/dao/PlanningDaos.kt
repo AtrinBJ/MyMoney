@@ -179,6 +179,14 @@ data class StatusCategoryRow(
 
 data class AccountSum(val accountId: String, val amountMinor: Long)
 
+data class CostTypeRowDb(
+    val currency: String,
+    val date: Long,
+    val costType: com.mymoney.core.domain.model.CostType?,
+    val essential: Boolean?,
+    val amountMinor: Long,
+)
+
 @Dao
 interface AnalyticsDao {
     @Query(
@@ -219,4 +227,12 @@ interface AnalyticsDao {
              AND a.kind IN ('EXPENSE', 'INCOME', 'REFUND')""",
     )
     suspend fun duplicatePairs(sinceDay: Long): Int
+
+    @Query(
+        """SELECT a.currencyCode AS currency, e.date AS date, e.costType AS costType, e.essential AS essential, SUM(e.amountMinor) AS amountMinor
+           FROM entry e JOIN account a ON a.id = e.accountId
+           WHERE e.deletedAt IS NULL AND e.status = 'COMPLETED' AND e.kind = 'EXPENSE' AND e.date BETWEEN :fromDay AND :toDay
+           GROUP BY a.currencyCode, e.date, e.costType, e.essential""",
+    )
+    suspend fun costTypes(fromDay: Long, toDay: Long): List<CostTypeRowDb>
 }

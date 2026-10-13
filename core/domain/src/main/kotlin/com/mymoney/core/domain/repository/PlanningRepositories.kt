@@ -102,4 +102,15 @@ interface LedgerAnalytics {
 
     /** Count of groups flagged by FBR-36 in the last [days] days. */
     suspend fun possibleDuplicateCount(since: LocalDate): Int
+
+    /** COMPLETED expenses (negative amounts) per (currency, day, cost type, essential flag). */
+    suspend fun costTypeRows(from: LocalDate, to: LocalDate): List<CostTypeRow>
 }
+
+data class CostTypeRow(
+    val currency: String,
+    val date: LocalDate,
+    val costType: com.mymoney.core.domain.model.CostType?,
+    val essential: Boolean?,
+    val amountMinor: Long,
+)

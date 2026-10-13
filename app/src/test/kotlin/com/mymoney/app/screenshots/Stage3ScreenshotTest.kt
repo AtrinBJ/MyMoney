@@ -100,7 +100,7 @@ class Stage3ScreenshotTest {
         exp("bank", 140_000_000, SeedData.categoryId("expense.housing"), -8)
     }
 
-    private fun dashboardVm() = DashboardViewModel(h.accounts, h.rates, h.currencies, h.settings, h.ledger, h.queries, h.clock)
+    private fun dashboardVm() = DashboardViewModel(h.provider, h.settings, h.ledger, h.analytics, h.queries)
 
     @Test
     @Config(qualifiers = "fa-w411dp-h891dp-xxhdpi")
@@ -109,7 +109,7 @@ class Stage3ScreenshotTest {
         val vm = dashboardVm()
         compose.setContent {
             ScreenFrame(formats) {
-                DashboardScreen(PaddingValues(), {}, {}, {}, {}, {}, {}, viewModel = vm)
+                DashboardScreen(PaddingValues(), {}, {}, {}, {}, {}, {}, {}, {}, viewModel = vm)
             }
         }
         compose.saveScreenshot("dashboard_fa_light")
@@ -121,7 +121,7 @@ class Stage3ScreenshotTest {
         val vm = dashboardVm()
         compose.setContent {
             ScreenFrame(formats, dark = true) {
-                DashboardScreen(PaddingValues(), {}, {}, {}, {}, {}, {}, viewModel = vm)
+                DashboardScreen(PaddingValues(), {}, {}, {}, {}, {}, {}, {}, {}, viewModel = vm)
             }
         }
         compose.saveScreenshot("dashboard_en_dark")
@@ -131,7 +131,7 @@ class Stage3ScreenshotTest {
     @Config(qualifiers = "fa-w411dp-h891dp-xxhdpi")
     fun accounts_fa() {
         val formats = h.formats(AppLanguage.FA)
-        val vm = AccountsViewModel(h.accounts, h.rates, h.currencies, h.settings, h.clock)
+        val vm = AccountsViewModel(h.provider)
         compose.setContent {
             ScreenFrame(formats) {
                 AccountsScreen(PaddingValues(), {}, {}, {}, viewModel = vm)

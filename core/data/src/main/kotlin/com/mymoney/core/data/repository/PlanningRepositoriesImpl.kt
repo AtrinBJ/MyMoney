@@ -339,4 +339,7 @@ class LedgerAnalyticsImpl @Inject constructor(private val db: MyMoneyDatabase) :
     override suspend fun pendingByAccount(): Map<String, Long> = dao.pendingByAccount().associate { it.accountId to it.amountMinor }
     override suspend fun balancesOn(date: LocalDate): Map<String, Long> = dao.balancesOn(date.toEpochDay()).associate { it.accountId to it.amountMinor }
     override suspend fun possibleDuplicateCount(since: LocalDate): Int = dao.duplicatePairs(since.toEpochDay())
+
+    override suspend fun costTypeRows(from: LocalDate, to: LocalDate): List<com.mymoney.core.domain.repository.CostTypeRow> =
+        dao.costTypes(from.toEpochDay(), to.toEpochDay()).map { com.mymoney.core.domain.repository.CostTypeRow(it.currency, it.date.toDate(), it.costType, it.essential, it.amountMinor) }
 }

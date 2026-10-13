@@ -10,7 +10,22 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.foundation.clickable
 import androidx.compose.material3.ExperimentalMaterial3Api
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
+import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.TextButton
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
+import com.mymoney.app.reminders.AndroidNotifier
+import com.mymoney.app.reminders.DailyMaintenanceWorker
+import com.mymoney.core.domain.money.Digits
+import java.util.Locale
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -39,6 +54,7 @@ fun SettingsScreen(
     onOpenCategories: () -> Unit,
     onOpenCurrencies: () -> Unit,
     onOpenRates: () -> Unit,
+    onOpenDataHealth: () -> Unit,
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -47,7 +63,7 @@ fun SettingsScreen(
         onBack = onBack,
         onLanguage = viewModel::setLanguage,
         onUpdate = viewModel::update,
-        links = SettingsLinks(onOpenCategories, onOpenCurrencies, onOpenRates),
+        links = SettingsLinks(onOpenCategories, onOpenCurrencies, onOpenRates, onOpenDataHealth),
     )
 }
 
@@ -56,6 +72,7 @@ data class SettingsLinks(
     val categories: () -> Unit = {},
     val currencies: () -> Unit = {},
     val rates: () -> Unit = {},
+    val dataHealth: () -> Unit = {},
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -167,6 +184,10 @@ internal fun SettingsContent(
             LinkRow(stringResource(R.string.cat_title), links.categories)
             LinkRow(stringResource(R.string.cur_title), links.currencies)
             LinkRow(stringResource(R.string.rate_title), links.rates)
+            LinkRow(stringResource(R.string.settings_data_health), links.dataHealth, stringResource(R.string.settings_data_health_d))
+
+            SectionHeader(stringResource(R.string.settings_section_notifications))
+            NotificationSettings(s, onUpdate, cancel)
 
             SectionHeader(stringResource(R.string.settings_section_currency))
             ChoiceRow(
@@ -200,10 +221,65 @@ internal fun SettingsContent(
 }
 
 @Composable
-private fun LinkRow(title: String, onClick: () -> Unit) {
-    androidx.compose.material3.ListItem(
+private fun LinkRow(title: String, onClick: () -> Unit, description: String? = null) {
+    ListItem(
         headlineContent = { Text(title) },
+        supportingContent = description?.let { { Text(it) } },
         trailingContent = { Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null) },
         modifier = Modifier.clickable(onClick = onClick),
     )
+}
+
+/**
+ * Reminders switch. On Android 13+ the notification permission is requested only here, when the user turns
+ * reminders on (docs/SECURITY.md §Permissions). If it is denied, reminders stay off.
+ */
+@Composable
+private fun NotificationSettings(s: AppSettings, onUpdate: ((AppSettings) -> AppSettings) -> Unit, cancel: String) {
+    val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        if (granted) onUpdate { it.copy(remindersEnabled = true) }
+    }
+    val blocked = s.remindersEnabled && !AndroidNotifier.canNotify(context)
+    SwitchRow(
+        title = stringResource(R.string.settings_reminders),
+        description = stringResource(R.string.settings_reminders_desc),
+        checked = s.remindersEnabled,
+        onCheckedChange = { on ->
+            val needsPermission = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+            when {
+                !on -> onUpdate { it.copy(remindersEnabled = false) }
+                needsPermission -> launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                else -> onUpdate { it.copy(remindersEnabled = true) }
+            }
+        },
+    )
+    if (blocked) {
+        ListItem(
+            headlineContent = { Text(stringResource(R.string.settings_notif_denied)) },
+            trailingContent = {
+                TextButton(onClick = {
+                    context.startActivity(
+                        Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                            .putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+                    )
+                }) { Text(stringResource(R.string.settings_open_system)) }
+            },
+        )
+    }
+    if (s.remindersEnabled) {
+        ChoiceRow(
+            title = stringResource(R.string.settings_reminder_hour),
+            options = (6..22).toList(),
+            selected = s.reminderHour,
+            label = { h -> Digits.localize(String.format(Locale.ROOT, "%02d:00", h), s.digits) },
+            onSelect = { h ->
+                onUpdate { it.copy(reminderHour = h) }
+                DailyMaintenanceWorker.schedule(context, h, hourChanged = true)
+            },
+            cancelLabel = cancel,
+        )
+    }
 }

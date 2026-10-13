@@ -12,6 +12,16 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountBalanceWallet
+import androidx.compose.material.icons.outlined.Tune
+import androidx.compose.material3.Icon
+import androidx.compose.material3.TextButton
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import com.mymoney.app.feature.planning.BudgetRow
+import com.mymoney.app.feature.planning.GoalRow
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -46,9 +56,13 @@ fun DashboardScreen(
     onOpenWealth: () -> Unit,
     onOpenReports: () -> Unit,
     onOpenRates: () -> Unit,
+    onOpenPlanning: () -> Unit,
+    onOpenInsights: () -> Unit,
     viewModel: DashboardViewModel = hiltViewModel(),
 ) {
     val s by viewModel.state.collectAsStateWithLifecycle()
+    var customizing by rememberSaveable { mutableStateOf(false) }
+    if (customizing) CustomizeSheet(s.hidden, viewModel::setCardVisible) { customizing = false }
     val formats = LocalFormats.current
     val spacing = MyMoneyTheme.spacing
     when {
@@ -72,7 +86,7 @@ fun DashboardScreen(
         ) {
             val nw = s.netWorth!!
             val base = nw.baseCurrency
-            item(key = "nw") {
+            if (DashboardCard.NET_WORTH !in s.hidden) item(key = "nw") {
                 SectionCard(containerColor = MaterialTheme.colorScheme.primaryContainer, onClick = onOpenWealth) {
                     Text(stringResource(R.string.home_net_worth), style = MaterialTheme.typography.labelLarge)
                     MoneyText(nw.netWorthMinor, base, style = MaterialTheme.typography.displaySmall)
@@ -111,7 +125,7 @@ fun DashboardScreen(
             }
             val cur = s.current!!
             val prev = s.previous!!
-            item(key = "flow") {
+            if (DashboardCard.CASH_FLOW !in s.hidden) item(key = "flow") {
                 SectionCard(
                     title = s.range?.let { r -> formats.dates.medium(r.start) + " – " + formats.dates.medium(r.endInclusive) },
                     actionLabel = stringResource(R.string.nav_reports),
@@ -145,12 +159,40 @@ fun DashboardScreen(
                     )
                 }
             }
-            item(key = "recent-h") {
+            s.forecast?.let { f -> item(key = "forecast") { ForecastCard(f, base) } }
+            if (DashboardCard.INSIGHTS !in s.hidden && s.insights.isNotEmpty()) {
+                item(key = "insights") { InsightsCard(s.insights, s.snapshot!!, onOpenInsights) }
+            }
+            if (DashboardCard.BUDGETS !in s.hidden && s.budgets.isNotEmpty()) {
+                item(key = "budgets") {
+                    SectionCard(title = stringResource(R.string.budget_title), actionLabel = stringResource(R.string.home_see_all), onAction = onOpenPlanning) {
+                        s.budgets.sortedByDescending { it.fraction }.take(3).forEach { BudgetRow(it) }
+                    }
+                }
+            }
+            if (DashboardCard.UPCOMING !in s.hidden) {
+                item(key = "upcoming") { UpcomingCard(s.upcoming, onOpenPlanning) }
+            }
+            if (DashboardCard.GOALS !in s.hidden && s.goals.isNotEmpty()) {
+                item(key = "goals") {
+                    SectionCard(title = stringResource(R.string.goal_title), actionLabel = stringResource(R.string.home_see_all), onAction = onOpenPlanning) {
+                        s.goals.take(3).forEach { GoalRow(it, onOpenPlanning) }
+                    }
+                }
+            }
+            if (DashboardCard.RECENT !in s.hidden) item(key = "recent-h") {
                 SectionCard(title = stringResource(R.string.home_recent), actionLabel = stringResource(R.string.home_see_all), onAction = onSeeAllTransactions) {
                     if (s.recent.isEmpty()) {
                         Text(stringResource(R.string.tx_empty_message), style = MaterialTheme.typography.bodyMedium)
                     }
                     s.recent.forEach { row -> EntryRowItem(row, onClick = { onOpenEntry(row.groupId) }) }
+                }
+            }
+            item(key = "customize") {
+                TextButton(onClick = { customizing = true }, modifier = Modifier.fillMaxWidth()) {
+                    Icon(Icons.Outlined.Tune, contentDescription = null)
+                    Spacer(Modifier.width(spacing.s))
+                    Text(stringResource(R.string.dash_customize))
                 }
             }
         }

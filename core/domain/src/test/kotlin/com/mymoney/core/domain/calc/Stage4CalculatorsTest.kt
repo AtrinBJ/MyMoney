@@ -140,11 +140,14 @@ class Stage4CalculatorsTest {
 
     // ---- Forecast (FBR-28) ----
     @Test
-    fun `forecast uses median daily variable spending and reports a range`() {
+    fun `forecast uses typical weekly spending rate and reports a range`() {
         val history = List(60) { (it % 10 + 1) * 1000L } // 1000..10000
         val f = MonthEndForecast.compute(LocalDate.of(2026, 3, 10), LocalDate.of(2026, 3, 20), 100_000, 20_000, 30_000, -5_000, history)
         assertTrue(f.hasVariableEstimate)
-        assertEquals(10 * 5_000, f.variableMedianMinor) // median 5000 × 10 days
+        assertTrue(f.variableMedianMinor!! in 45_000..65_000) // about 5,500/day × 10 days
+        // Spending every other day must not collapse to a zero estimate.
+        val lumpy = MonthEndForecast.compute(LocalDate.of(2026, 3, 10), LocalDate.of(2026, 3, 20), 0, 0, 0, 0, List(60) { if (it % 2 == 0) 2000L else 0L })
+        assertTrue(lumpy.variableMedianMinor!! in 8_000..12_000)
         assertTrue(f.lowMinor < f.projectedMinor && f.projectedMinor < f.highMinor)
         val short = MonthEndForecast.compute(LocalDate.of(2026, 3, 10), LocalDate.of(2026, 3, 20), 100_000, 0, 0, 0, List(10) { 1000L })
         assertEquals(false, short.hasVariableEstimate)

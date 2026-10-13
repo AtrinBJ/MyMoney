@@ -10,7 +10,7 @@ data class Forecast(
     val scheduledInMinor: Long,
     val scheduledOutMinor: Long,
     val pendingMinor: Long,
-    /** Median daily variable spending × remaining days; null when there is too little history. */
+    /** Typical (median) weekly-rate variable spending × remaining days; null when there is too little history. */
     val variableMedianMinor: Long?,
     val variableLowMinor: Long?,
     val variableHighMinor: Long?,
@@ -28,6 +28,7 @@ data class Forecast(
 object MonthEndForecast {
     const val MIN_HISTORY_DAYS = 30
     const val LOOKBACK_DAYS = 90
+    const val WINDOW_DAYS = 7
 
     /**
      * [dailyVariableSpend] = per-day spending (positive) of non-recurring expenses minus refunds for the last
@@ -42,11 +43,15 @@ object MonthEndForecast {
         scheduledOutMinor: Long,
         pendingMinor: Long,
         dailyVariableSpend: List<Long>,
+        /** Estimates are rounded to this step so they do not look more precise than they are. */
+        roundTo: Long = 1,
     ): Forecast {
         val remainingDays = (until.toEpochDay() - today.toEpochDay()).coerceAtLeast(0)
         val enough = dailyVariableSpend.size >= MIN_HISTORY_DAYS
-        val sorted = dailyVariableSpend.sorted()
-        fun pct(p: Double): Long = if (sorted.isEmpty()) 0 else sorted[((sorted.size - 1) * p).toInt()]
+        // Spending is lumpy (many zero days), so a daily median is often 0. Use the spread of rolling
+        // 7-day totals instead: median/25th/75th percentile of the per-day rate over each week.
+        val weekly = if (enough) dailyVariableSpend.windowed(WINDOW_DAYS).map { it.sum().toDouble() / WINDOW_DAYS }.sorted() else emptyList()
+        fun pct(p: Double): Long = if (weekly.isEmpty()) 0 else Math.round(weekly[((weekly.size - 1) * p).toInt()] * remainingDays / roundTo) * roundTo
         return Forecast(
             asOf = today,
             until = until,
@@ -54,9 +59,9 @@ object MonthEndForecast {
             scheduledInMinor = scheduledInMinor,
             scheduledOutMinor = scheduledOutMinor,
             pendingMinor = pendingMinor,
-            variableMedianMinor = if (enough) pct(0.5) * remainingDays else null,
-            variableLowMinor = if (enough) pct(0.25) * remainingDays else null,
-            variableHighMinor = if (enough) pct(0.75) * remainingDays else null,
+            variableMedianMinor = if (enough) pct(0.5) else null,
+            variableLowMinor = if (enough) pct(0.25) else null,
+            variableHighMinor = if (enough) pct(0.75) else null,
             historyDays = dailyVariableSpend.size,
         )
     }
