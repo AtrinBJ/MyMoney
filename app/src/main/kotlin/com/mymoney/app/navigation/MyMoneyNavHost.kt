@@ -16,7 +16,13 @@ import com.mymoney.app.feature.categories.CategoriesScreen
 import com.mymoney.app.feature.currency.CurrenciesScreen
 import com.mymoney.app.feature.currency.RatesScreen
 import com.mymoney.app.feature.dashboard.DashboardScreen
+import androidx.navigation.toRoute
 import com.mymoney.app.feature.planning.BudgetEditorScreen
+import com.mymoney.app.feature.wealth.AssetDetailScreen
+import com.mymoney.app.feature.wealth.AssetEditorScreen
+import com.mymoney.app.feature.wealth.ObligationDetailScreen
+import com.mymoney.app.feature.wealth.ObligationEditorScreen
+import com.mymoney.app.feature.wealth.ObligationsScreen
 import com.mymoney.app.feature.planning.GoalDetailScreen
 import com.mymoney.app.feature.planning.GoalEditorScreen
 import com.mymoney.app.feature.planning.PlanningScreen
@@ -82,6 +88,9 @@ fun MyMoneyNavHost(
                     onOpenAccount = { navController.navigate(AccountDetailRoute(it)) },
                     onAddAccount = { navController.navigate(AccountEditorRoute()) },
                     onOpenRates = { navController.navigate(RatesRoute) },
+                    onOpenAsset = { navController.navigate(AssetDetailRoute(it)) },
+                    onAddAsset = { navController.navigate(AssetEditorRoute()) },
+                    onOpenObligations = { navController.navigate(ObligationsRoute(it)) },
                 )
             }
         }
@@ -129,5 +138,23 @@ fun MyMoneyNavHost(
         composable<GoalDetailRoute> { GoalDetailScreen(onBack = back, onEdit = { navController.navigate(GoalEditorRoute(it)) }) }
         composable<GoalEditorRoute> { GoalEditorScreen(onDone = back) }
         composable<ToolsRoute> { ToolsScreen(onBack = back) }
+        composable<AssetEditorRoute> { AssetEditorScreen(onDone = back) }
+        composable<AssetDetailRoute> { AssetDetailScreen(onBack = back, onEdit = { navController.navigate(AssetEditorRoute(it)) }) }
+        composable<ObligationsRoute> { entry ->
+            ObligationsScreen(
+                initialReceivables = entry.toRoute<ObligationsRoute>().receivables,
+                onBack = back,
+                onOpen = { navController.navigate(ObligationDetailRoute(it)) },
+                onAdd = { navController.navigate(ObligationEditorRoute(it)) },
+            )
+        }
+        composable<ObligationEditorRoute> { ObligationEditorScreen(onDone = back) }
+        composable<ObligationDetailRoute> {
+            ObligationDetailScreen(
+                onBack = back,
+                onOpenEntry = openEntry,
+                onAddInstallments = { navController.navigate(RuleEditorRoute(kind = "LOAN_INSTALLMENT", toAccountId = it)) },
+            )
+        }
     }
 }

@@ -49,6 +49,9 @@ fun AccountsScreen(
     onOpenAccount: (String) -> Unit,
     onAddAccount: () -> Unit,
     onOpenRates: () -> Unit,
+    onOpenAsset: (String) -> Unit = {},
+    onAddAsset: () -> Unit = {},
+    onOpenObligations: (receivables: Boolean) -> Unit = {},
     viewModel: AccountsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -63,17 +66,21 @@ fun AccountsScreen(
             onAction = onAddAccount,
             modifier = Modifier.padding(contentPadding),
         )
-        else -> AccountsList(summary, contentPadding, onOpenAccount, onAddAccount, onOpenRates)
+        else -> AccountsList(state, summary, contentPadding, onOpenAccount, onAddAccount, onOpenRates, onOpenAsset, onAddAsset, onOpenObligations)
     }
 }
 
 @Composable
 private fun AccountsList(
+    state: AccountsUiState,
     summary: NetWorthSummary,
     contentPadding: PaddingValues,
     onOpenAccount: (String) -> Unit,
     onAddAccount: () -> Unit,
     onOpenRates: () -> Unit,
+    onOpenAsset: (String) -> Unit,
+    onAddAsset: () -> Unit,
+    onOpenObligations: (Boolean) -> Unit,
 ) {
     var showArchived by rememberSaveable { mutableStateOf(false) }
     val spacing = MyMoneyTheme.spacing
@@ -123,6 +130,50 @@ private fun AccountsList(
         }
         item(key = "add") {
             TextButton(onClick = onAddAccount) { Text(stringResource(R.string.acc_add)) }
+        }
+        item(key = "assets") {
+            SectionCard(title = stringResource(R.string.asset_title), actionLabel = stringResource(R.string.action_add), onAction = onAddAsset) {
+                if (state.holdings.isEmpty()) Text(stringResource(R.string.asset_empty), style = MaterialTheme.typography.bodyMedium)
+                if (state.staleAssets > 0) {
+                    InfoBanner(stringResource(R.string.asset_stale_count, state.staleAssets))
+                }
+                state.holdings.forEach { h ->
+                    ListItem(
+                        modifier = Modifier.clickable { onOpenAsset(h.asset.id) },
+                        colors = ListItemDefaults.colors(containerColor = androidx.compose.ui.graphics.Color.Transparent),
+                        headlineContent = { Text(h.asset.name) },
+                        supportingContent = {
+                            Text(com.mymoney.core.domain.money.Digits.localize(h.quantity.toPlainString(), formats.settings.digits) + " " + h.asset.unit)
+                        },
+                        trailingContent = {
+                            Column(horizontalAlignment = Alignment.End) {
+                                val v = h.valueMinor
+                                if (v == null) Text(stringResource(R.string.asset_no_value), style = MaterialTheme.typography.bodySmall, color = MyMoneyTheme.finance.warning)
+                                else MoneyText(v, h.asset.currency)
+                                h.unrealizedMinor?.let { MoneyText(it, h.asset.currency, style = MaterialTheme.typography.bodySmall, color = AmountColor.SIGNED, sign = com.mymoney.core.domain.money.SignDisplay.ALWAYS) }
+                            }
+                        },
+                    )
+                }
+            }
+        }
+        item(key = "obligations") {
+            SectionCard(title = stringResource(R.string.ob_title)) {
+                ListItem(
+                    modifier = Modifier.clickable { onOpenObligations(false) },
+                    colors = ListItemDefaults.colors(containerColor = androidx.compose.ui.graphics.Color.Transparent),
+                    headlineContent = { Text(stringResource(R.string.ob_debts)) },
+                    supportingContent = { Text(stringResource(R.string.ob_open_count, state.debtCount)) },
+                    trailingContent = { MoneyText(state.debtsBase, summary.baseCurrency, color = AmountColor.EXPENSE) },
+                )
+                ListItem(
+                    modifier = Modifier.clickable { onOpenObligations(true) },
+                    colors = ListItemDefaults.colors(containerColor = androidx.compose.ui.graphics.Color.Transparent),
+                    headlineContent = { Text(stringResource(R.string.ob_receivables)) },
+                    supportingContent = { Text(stringResource(R.string.ob_open_count, state.receivableCount)) },
+                    trailingContent = { MoneyText(state.receivablesBase, summary.baseCurrency, color = AmountColor.INCOME) },
+                )
+            }
         }
         if (archived.isNotEmpty()) {
             item(key = "arch-h") {

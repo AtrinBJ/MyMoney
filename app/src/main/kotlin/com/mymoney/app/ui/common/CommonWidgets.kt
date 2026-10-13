@@ -75,13 +75,15 @@ fun EntryRowItem(row: EntryListRow, onClick: () -> Unit, modifier: Modifier = Mo
     val formats = LocalFormats.current
     val (icon, tint) = when (row.kind) {
         EntryKind.TRANSFER -> Icons.Filled.SwapHoriz to MyMoneyTheme.finance.transfer
-        EntryKind.ADJUSTMENT, EntryKind.OPENING_BALANCE -> Icons.Filled.Tune to MaterialTheme.colorScheme.outline
+        EntryKind.ADJUSTMENT, EntryKind.OPENING_BALANCE, EntryKind.WRITE_OFF -> Icons.Filled.Tune to MaterialTheme.colorScheme.outline
+        EntryKind.ASSET_BUY, EntryKind.ASSET_SELL -> IconKeys.icon("chart") to MaterialTheme.colorScheme.secondary
         else -> IconKeys.icon(row.categoryIconKey) to ColorKeys.color(row.categoryColorKey)
     }
     val title = when {
         row.kind == EntryKind.TRANSFER -> stringResource(R.string.tx_transfer_to, row.accountName, row.counterpartAccountName ?: "?")
         row.splitCount > 0 -> stringResource(R.string.tx_split_count, row.splitCount)
-        row.kind == EntryKind.ADJUSTMENT || row.kind == EntryKind.OPENING_BALANCE -> stringResource(kindLabel(row.kind))
+        row.kind == EntryKind.ADJUSTMENT || row.kind == EntryKind.OPENING_BALANCE || row.kind == EntryKind.WRITE_OFF -> stringResource(kindLabel(row.kind))
+        row.kind == EntryKind.ASSET_BUY || row.kind == EntryKind.ASSET_SELL -> stringResource(kindLabel(row.kind)) + (row.note?.let { " · $it" } ?: "")
         else -> categoryLabel(row.categorySystemKey, row.categoryName)
     }
     val subtitle = buildList {

@@ -60,6 +60,13 @@ data class EntryEditorRoute(
 @Serializable data class GoalEditorRoute(val goalId: String? = null)
 @Serializable data object ToolsRoute
 
+// Wealth
+@Serializable data class AssetEditorRoute(val assetId: String? = null)
+@Serializable data class AssetDetailRoute(val assetId: String)
+@Serializable data class ObligationsRoute(val receivables: Boolean = false)
+@Serializable data class ObligationEditorRoute(val receivable: Boolean = false)
+@Serializable data class ObligationDetailRoute(val accountId: String)
+
 enum class TopLevelDestination(
     val graph: Any,
     val startRoute: KClass<*>,

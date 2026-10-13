@@ -143,7 +143,11 @@ fun EntryDetailScreen(
     var confirmDelete by rememberSaveable { mutableStateOf(false) }
     LaunchedEffect(s.deleted) { if (s.deleted) onBack() }
     val group = s.group
-    val editable = group != null && group.entries.none { it.kind == EntryKind.OPENING_BALANCE }
+    // Opening balances are edited on the account; asset trades on the asset (keeps holdings in sync);
+    // write-offs are final.
+    val editable = group != null && group.entries.none {
+        it.kind == EntryKind.OPENING_BALANCE || it.kind == EntryKind.ASSET_BUY || it.kind == EntryKind.ASSET_SELL || it.kind == EntryKind.WRITE_OFF
+    }
 
     Scaffold(
         topBar = {
