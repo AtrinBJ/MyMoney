@@ -136,3 +136,15 @@ fun InfoBanner(text: String, modifier: Modifier = Modifier, actionLabel: String?
         }
     }
 }
+
+/**
+ * Marks a forecast/projection so it is never confused with a recorded figure (docs/06 EstimateBadge, FBR-28).
+ */
+@Composable
+fun EstimateNote(text: String, modifier: Modifier = Modifier) {
+    Row(modifier.padding(top = 4.dp), verticalAlignment = Alignment.Top) {
+        Text("≈", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.tertiary)
+        Spacer(Modifier.width(6.dp))
+        Text(text, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
+}
