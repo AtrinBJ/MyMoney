@@ -61,7 +61,13 @@ data class TransferDraft(
     override val status: EntryStatus = EntryStatus.COMPLETED,
     override val note: String? = null,
     override val tagIds: Set<String> = emptySet(),
+    /** FEES for transfer fees; INTEREST for the interest part of a loan payment (FBR-04). */
+    val extraLeg: ExtraLeg = ExtraLeg.FEES,
+    val recurringRuleId: String? = null,
+    val occurrenceDate: LocalDate? = null,
 ) : OperationDraft
+
+enum class ExtraLeg { FEES, INTEREST }
 
 /** Money returned for an expense. Linked refunds inherit the expense's category or split (FBR-08). */
 data class RefundDraft(

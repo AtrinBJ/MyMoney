@@ -46,8 +46,8 @@ class RecordOperationUseCase @Inject constructor(
         val group: EntryGroup = when (draft) {
             is IncomeExpenseDraft -> builder.incomeExpense(draft)
             is TransferDraft -> {
-                val fees = categories.getBySystemKey(SystemCategories.FEES)?.id
-                builder.transfer(draft, fees)
+                val key = if (draft.extraLeg == ExtraLeg.INTEREST) SystemCategories.INTEREST else SystemCategories.FEES
+                builder.transfer(draft, categories.getBySystemKey(key)?.id)
             }
             is RefundDraft -> {
                 val original = draft.originalEntryId?.let { ledger.getEntry(it) }

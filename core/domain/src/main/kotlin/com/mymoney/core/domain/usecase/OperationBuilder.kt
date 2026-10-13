@@ -43,7 +43,7 @@ class OperationBuilder(
 
     /**
      * Two TRANSFER legs (out negative, in positive) plus an optional fee EXPENSE leg (FBR-03, FBR-16).
-     * [feeCategoryId] is the protected `expense.fees` category.
+     * [feeCategoryId] is the protected `expense.fees` (or `expense.interest` for loan payments) category.
      */
     fun transfer(d: TransferDraft, feeCategoryId: String?): EntryGroup {
         val base = Entry(
@@ -56,6 +56,8 @@ class OperationBuilder(
             timeMinutes = d.timeMinutes,
             status = d.status,
             note = d.note.clean(),
+            recurringRuleId = d.recurringRuleId,
+            occurrenceDate = d.occurrenceDate,
             createdAt = nowMillis,
             updatedAt = nowMillis,
             tagIds = d.tagIds,

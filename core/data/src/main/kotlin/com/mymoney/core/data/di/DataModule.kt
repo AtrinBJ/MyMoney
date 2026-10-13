@@ -15,6 +15,22 @@ import com.mymoney.core.data.repository.CurrencyRepositoryImpl
 import com.mymoney.core.data.repository.ExchangeRateRepositoryImpl
 import com.mymoney.core.data.repository.LedgerRepositoryImpl
 import com.mymoney.core.data.repository.TagRepositoryImpl
+import com.mymoney.core.data.repository.AssetRepositoryImpl
+import com.mymoney.core.data.repository.BudgetRepositoryImpl
+import com.mymoney.core.data.repository.GoalRepositoryImpl
+import com.mymoney.core.data.repository.LedgerAnalyticsImpl
+import com.mymoney.core.data.repository.NotificationLogRepositoryImpl
+import com.mymoney.core.data.repository.ObligationRepositoryImpl
+import com.mymoney.core.data.repository.RecurringRepositoryImpl
+import com.mymoney.core.data.repository.RoomTransactionRunner
+import com.mymoney.core.domain.repository.AssetRepository
+import com.mymoney.core.domain.repository.BudgetRepository
+import com.mymoney.core.domain.repository.GoalRepository
+import com.mymoney.core.domain.repository.LedgerAnalytics
+import com.mymoney.core.domain.repository.NotificationLogRepository
+import com.mymoney.core.domain.repository.ObligationRepository
+import com.mymoney.core.domain.repository.RecurringRepository
+import com.mymoney.core.domain.repository.TransactionRunner
 import com.mymoney.core.data.security.DbKeyProvider
 import com.mymoney.core.domain.common.IdGenerator
 import com.mymoney.core.domain.common.SystemTimeProvider
@@ -82,4 +98,20 @@ abstract class DataBindsModule {
     @Binds abstract fun bindTagRepository(impl: TagRepositoryImpl): TagRepository
 
     @Binds abstract fun bindLedgerRepository(impl: LedgerRepositoryImpl): LedgerRepository
+
+    @Binds abstract fun bindTransactionRunner(impl: RoomTransactionRunner): TransactionRunner
+
+    @Binds abstract fun bindBudgetRepository(impl: BudgetRepositoryImpl): BudgetRepository
+
+    @Binds abstract fun bindRecurringRepository(impl: RecurringRepositoryImpl): RecurringRepository
+
+    @Binds abstract fun bindObligationRepository(impl: ObligationRepositoryImpl): ObligationRepository
+
+    @Binds abstract fun bindAssetRepository(impl: AssetRepositoryImpl): AssetRepository
+
+    @Binds abstract fun bindGoalRepository(impl: GoalRepositoryImpl): GoalRepository
+
+    @Binds abstract fun bindNotificationLog(impl: NotificationLogRepositoryImpl): NotificationLogRepository
+
+    @Binds abstract fun bindLedgerAnalytics(impl: LedgerAnalyticsImpl): LedgerAnalytics
 }
