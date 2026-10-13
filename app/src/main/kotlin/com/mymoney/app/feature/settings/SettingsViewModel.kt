@@ -17,16 +17,28 @@ import kotlinx.coroutines.launch
 data class SettingsUiState(
     val settings: AppSettings? = null,
     val language: AppLanguage = AppLanguage.FA,
+    /** The app lock is on exactly when a PIN is stored. */
+    val pinSet: Boolean = false,
+    val biometricAvailable: Boolean = false,
 )
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val repository: SettingsRepository,
     private val localeController: LocaleController,
+    private val pins: com.mymoney.core.data.security.PinStore,
+    @dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context,
 ) : ViewModel() {
 
     val state: StateFlow<SettingsUiState> = repository.settings
-        .map { SettingsUiState(settings = it, language = localeController.current()) }
+        .map {
+            SettingsUiState(
+                settings = it,
+                language = localeController.current(),
+                pinSet = pins.hasPin(),
+                biometricAvailable = com.mymoney.app.lock.biometricAvailable(context),
+            )
+        }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), SettingsUiState())
 
     fun update(transform: (AppSettings) -> AppSettings) {

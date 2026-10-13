@@ -38,6 +38,8 @@ data class IncomeExpenseDraft(
     override val tagIds: Set<String> = emptySet(),
     val recurringRuleId: String? = null,
     val occurrenceDate: LocalDate? = null,
+    /** Set for rows recorded by a CSV import, so the whole import can be undone (FBR-37). */
+    val importBatchId: String? = null,
 ) : OperationDraft {
     init {
         require(kind == EntryKind.INCOME || kind == EntryKind.EXPENSE) { "kind must be INCOME or EXPENSE" }

@@ -33,6 +33,7 @@ class OperationBuilder(
             essential = if (d.kind == EntryKind.EXPENSE) d.essential else null,
             recurringRuleId = d.recurringRuleId,
             occurrenceDate = d.occurrenceDate,
+            importBatchId = d.importBatchId,
             createdAt = nowMillis,
             updatedAt = nowMillis,
             splits = d.splits.map { EntrySplit(ids.newId(), it.categoryId, it.amountMinor, it.note.clean()) },

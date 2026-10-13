@@ -87,6 +87,11 @@ class LedgerRepositoryImpl @Inject constructor(
 
     override suspend fun purgeDeletedBefore(cutoffMillis: Long): Int = dao.purgeDeletedBefore(cutoffMillis)
 
+    override suspend fun groupIdsForImport(batchId: String): List<String> = dao.groupIdsForImport(batchId)
+
+    override suspend fun entriesForAccount(accountId: String, from: LocalDate, to: LocalDate): List<Entry> =
+        dao.entriesForAccount(accountId, from.toEpochDay(), to.toEpochDay()).map { it.toDomain() }
+
     override suspend fun refundedTotal(originalEntryId: String, excludingGroupId: String?): Long =
         dao.refundedTotal(originalEntryId, excludingGroupId)
 

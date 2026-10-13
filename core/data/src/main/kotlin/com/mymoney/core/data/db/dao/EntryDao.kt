@@ -110,6 +110,12 @@ interface EntryDao {
     @Query("UPDATE entry SET deletedAt = NULL, updatedAt = :at WHERE groupId = :groupId")
     suspend fun restoreGroup(groupId: String, at: Long)
 
+    @Query("SELECT DISTINCT groupId FROM entry WHERE importBatchId = :batchId AND deletedAt IS NULL")
+    suspend fun groupIdsForImport(batchId: String): List<String>
+
+    @Query("SELECT * FROM entry WHERE accountId = :accountId AND deletedAt IS NULL AND date BETWEEN :from AND :to")
+    suspend fun entriesForAccount(accountId: String, from: Long, to: Long): List<EntryEntity>
+
     @Query("DELETE FROM entry WHERE deletedAt IS NOT NULL AND deletedAt < :cutoff")
     suspend fun purgeDeletedBefore(cutoff: Long): Int
 
@@ -183,4 +189,32 @@ interface EntryDao {
 
     @Query("SELECT * FROM entry WHERE deletedAt IS NOT NULL ORDER BY deletedAt DESC")
     fun observeTrash(): Flow<List<EntryEntity>>
+
+    /** One row per deleted operation (the outgoing leg of a transfer represents it). */
+    @Query(
+        """SELECT e.groupId AS groupId, e.kind AS kind, e.amountMinor AS amountMinor, e.date AS date, e.deletedAt AS deletedAt,
+                  e.payee AS payee, a.name AS accountName, a.currencyCode AS currency, c.name AS categoryName, c.systemKey AS categorySystemKey
+           FROM entry e JOIN account a ON a.id = e.accountId LEFT JOIN category c ON c.id = e.categoryId
+           WHERE e.deletedAt IS NOT NULL
+             AND e.id = (SELECT e2.id FROM entry e2 WHERE e2.groupId = e.groupId
+                         ORDER BY (e2.kind = 'TRANSFER' AND e2.amountMinor > 0), e2.id LIMIT 1)
+           ORDER BY e.deletedAt DESC""",
+    )
+    fun observeTrashGroups(): Flow<List<TrashRow>>
+
+    @Query("DELETE FROM entry WHERE groupId = :groupId AND deletedAt IS NOT NULL")
+    suspend fun purgeGroup(groupId: String): Int
 }
+
+data class TrashRow(
+    val groupId: String,
+    val kind: EntryKind,
+    val amountMinor: Long,
+    val date: Long,
+    val deletedAt: Long,
+    val payee: String?,
+    val accountName: String,
+    val currency: String,
+    val categoryName: String?,
+    val categorySystemKey: String?,
+)

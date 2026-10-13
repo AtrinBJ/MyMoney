@@ -29,7 +29,7 @@ class MigrationTest {
     )
 
     @Test
-    fun migrate1to2_preserves_ledger_data() {
+    fun migrate1to3_preserves_ledger_data() {
         helper.createDatabase(1).apply {
             execSQL("INSERT INTO currency (code, minorDigits, symbol, nameFa, nameEn, isCustom, isEnabled, sortOrder) VALUES ('IRR', 0, 'r', 'r', 'Rial', 0, 1, 0)")
             execSQL(
@@ -53,6 +53,7 @@ class MigrationTest {
         }
 
         helper.runMigrationsAndValidate(2).close()
+        helper.runMigrationsAndValidate(3).close()
 
         val db = Room.databaseBuilder(context, MyMoneyDatabase::class.java, file.absolutePath)
             .allowMainThreadQueries()
@@ -64,6 +65,9 @@ class MigrationTest {
             // New v2 tables exist and are usable.
             assertEquals(0, db.recurringDao().getAll().size)
             assertEquals(0L, db.goalDao().allocatedFrom("a1"))
+            // v3 tables exist; an existing entry has no attachments and no import batch.
+            assertEquals(0, db.attachmentDao().all().size)
+            assertEquals(0, db.importBatchDao().all().size)
         }
         db.close()
     }

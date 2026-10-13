@@ -114,4 +114,6 @@ abstract class DataBindsModule {
     @Binds abstract fun bindNotificationLog(impl: NotificationLogRepositoryImpl): NotificationLogRepository
 
     @Binds abstract fun bindLedgerAnalytics(impl: LedgerAnalyticsImpl): LedgerAnalytics
+
+    @Binds abstract fun bindImportBatches(impl: com.mymoney.core.data.repository.ImportBatchRepositoryImpl): com.mymoney.core.domain.repository.ImportBatchRepository
 }

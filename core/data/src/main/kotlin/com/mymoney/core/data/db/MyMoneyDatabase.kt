@@ -8,6 +8,9 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.mymoney.core.data.db.dao.AccountDao
 import com.mymoney.core.data.db.dao.AnalyticsDao
 import com.mymoney.core.data.db.dao.AssetDao
+import com.mymoney.core.data.db.dao.AttachmentDao
+import com.mymoney.core.data.db.dao.BackupRecordDao
+import com.mymoney.core.data.db.dao.ImportBatchDao
 import com.mymoney.core.data.db.dao.BudgetDao
 import com.mymoney.core.data.db.dao.GoalDao
 import com.mymoney.core.data.db.dao.NotificationLogDao
@@ -23,6 +26,9 @@ import com.mymoney.core.data.db.entity.AccountEntity
 import com.mymoney.core.data.db.entity.AssetEntity
 import com.mymoney.core.data.db.entity.AssetTradeEntity
 import com.mymoney.core.data.db.entity.AssetValuationEntity
+import com.mymoney.core.data.db.entity.AttachmentEntity
+import com.mymoney.core.data.db.entity.BackupRecordEntity
+import com.mymoney.core.data.db.entity.ImportBatchEntity
 import com.mymoney.core.data.db.entity.BudgetAlertStateEntity
 import com.mymoney.core.data.db.entity.BudgetCategoryEntity
 import com.mymoney.core.data.db.entity.BudgetEntity
@@ -76,13 +82,19 @@ import com.mymoney.core.data.db.entity.TagEntity
         GoalAccountEntity::class,
         GoalContributionEntity::class,
         NotificationLogEntity::class,
+        // v3
+        AttachmentEntity::class,
+        ImportBatchEntity::class,
+        BackupRecordEntity::class,
     ],
     views = [CategoryAmountView::class],
-    version = 2,
+    version = 3,
     exportSchema = true,
     autoMigrations = [
         // v1 → v2 only adds tables (stage 4); verified by MigrationTest.
         AutoMigration(from = 1, to = 2),
+        // v2 → v3 only adds tables (stage 5); verified by MigrationTest.
+        AutoMigration(from = 2, to = 3),
     ],
 )
 @TypeConverters(Converters::class)
@@ -101,6 +113,9 @@ abstract class MyMoneyDatabase : RoomDatabase() {
     abstract fun goalDao(): GoalDao
     abstract fun notificationLogDao(): NotificationLogDao
     abstract fun analyticsDao(): AnalyticsDao
+    abstract fun attachmentDao(): AttachmentDao
+    abstract fun importBatchDao(): ImportBatchDao
+    abstract fun backupRecordDao(): BackupRecordDao
 
     /** Seeds reference data the first time the database file is created. */
     object SeedCallback : Callback() {

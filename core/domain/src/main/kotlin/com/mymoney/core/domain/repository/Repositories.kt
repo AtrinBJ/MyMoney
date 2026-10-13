@@ -102,6 +102,12 @@ interface LedgerRepository {
     suspend fun restoreGroup(groupId: String)
     suspend fun purgeDeletedBefore(cutoffMillis: Long): Int
 
+    /** Groups recorded by one CSV import (FBR-37). */
+    suspend fun groupIdsForImport(batchId: String): List<String>
+
+    /** Live entries of one account in a date range (duplicate check of CSV import). */
+    suspend fun entriesForAccount(accountId: String, from: LocalDate, to: LocalDate): List<Entry>
+
     /** Sum of refunds linked to [originalEntryId], optionally excluding one operation (when editing it). */
     suspend fun refundedTotal(originalEntryId: String, excludingGroupId: String? = null): Long
 

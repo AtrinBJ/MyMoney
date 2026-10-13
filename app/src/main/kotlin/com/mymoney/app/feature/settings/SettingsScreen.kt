@@ -22,6 +22,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.TextButton
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
+import com.mymoney.app.lock.PinSetupMode
 import com.mymoney.app.reminders.AndroidNotifier
 import com.mymoney.app.reminders.DailyMaintenanceWorker
 import com.mymoney.core.domain.money.Digits
@@ -55,6 +56,7 @@ fun SettingsScreen(
     onOpenCurrencies: () -> Unit,
     onOpenRates: () -> Unit,
     onOpenDataHealth: () -> Unit,
+    onPin: (PinSetupMode) -> Unit,
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -63,7 +65,7 @@ fun SettingsScreen(
         onBack = onBack,
         onLanguage = viewModel::setLanguage,
         onUpdate = viewModel::update,
-        links = SettingsLinks(onOpenCategories, onOpenCurrencies, onOpenRates, onOpenDataHealth),
+        links = SettingsLinks(onOpenCategories, onOpenCurrencies, onOpenRates, onOpenDataHealth, onPin),
     )
 }
 
@@ -73,6 +75,7 @@ data class SettingsLinks(
     val currencies: () -> Unit = {},
     val rates: () -> Unit = {},
     val dataHealth: () -> Unit = {},
+    val pin: (PinSetupMode) -> Unit = {},
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -205,6 +208,7 @@ internal fun SettingsContent(
             )
 
             SectionHeader(stringResource(R.string.settings_section_privacy))
+            SecuritySettings(state, s, onUpdate, links, cancel)
             SwitchRow(
                 title = stringResource(R.string.settings_secure_screen),
                 description = stringResource(R.string.settings_secure_screen_desc),
@@ -260,6 +264,7 @@ private fun NotificationSettings(s: AppSettings, onUpdate: ((AppSettings) -> App
             headlineContent = { Text(stringResource(R.string.settings_notif_denied)) },
             trailingContent = {
                 TextButton(onClick = {
+                    (context.applicationContext as? com.mymoney.app.MyMoneyApp)?.lockManager?.allowNextBackground()
                     context.startActivity(
                         Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
                             .putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
@@ -282,4 +287,38 @@ private fun NotificationSettings(s: AppSettings, onUpdate: ((AppSettings) -> App
             cancelLabel = cancel,
         )
     }
+}
+
+/** App lock settings (docs/SECURITY.md §App lock). Turning the lock off or changing the PIN asks for the PIN. */
+@Composable
+private fun SecuritySettings(state: SettingsUiState, s: AppSettings, onUpdate: ((AppSettings) -> AppSettings) -> Unit, links: SettingsLinks, cancel: String) {
+    SwitchRow(
+        title = stringResource(R.string.settings_app_lock),
+        description = stringResource(R.string.settings_app_lock_desc),
+        checked = state.pinSet,
+        onCheckedChange = { on -> links.pin(if (on) PinSetupMode.SET else PinSetupMode.DISABLE) },
+    )
+    if (!state.pinSet) return
+    LinkRow(stringResource(R.string.pin_change_title), { links.pin(PinSetupMode.CHANGE) })
+    SwitchRow(
+        title = stringResource(R.string.settings_biometric),
+        description = stringResource(if (state.biometricAvailable) R.string.settings_biometric_desc else R.string.settings_biometric_unavailable),
+        checked = s.biometricEnabled && state.biometricAvailable,
+        enabled = state.biometricAvailable,
+        onCheckedChange = { v -> onUpdate { it.copy(biometricEnabled = v) } },
+    )
+    ChoiceRow(
+        title = stringResource(R.string.settings_auto_lock),
+        options = listOf(0, 1, 5, 15, -1),
+        selected = s.autoLockMinutes,
+        label = { m ->
+            when (m) {
+                0 -> stringResource(R.string.settings_auto_lock_now)
+                -1 -> stringResource(R.string.settings_auto_lock_restart)
+                else -> stringResource(R.string.settings_auto_lock_minutes, Digits.localize(m.toString(), s.digits))
+            }
+        },
+        onSelect = { v -> onUpdate { it.copy(autoLockMinutes = v) } },
+        cancelLabel = cancel,
+    )
 }

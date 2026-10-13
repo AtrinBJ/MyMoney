@@ -181,6 +181,9 @@ class InMemoryStore {
             entries.values.removeAll { it.deletedAt != null && it.deletedAt < cutoffMillis }
             return before - entries.size
         }
+        override suspend fun groupIdsForImport(batchId: String) = live().filter { it.importBatchId == batchId }.map { it.groupId }.distinct()
+        override suspend fun entriesForAccount(accountId: String, from: LocalDate, to: LocalDate) =
+            live().filter { it.accountId == accountId && it.date in from..to }
         override suspend fun refundedTotal(originalEntryId: String, excludingGroupId: String?) =
             live().filter { it.kind == EntryKind.REFUND && it.relatedEntryId == originalEntryId && it.groupId != excludingGroupId }.sumOf { it.amountMinor }
         override suspend fun findSimilar(accountId: String, kind: EntryKind, amountMinor: Long, date: LocalDate, excludingGroupId: String?) =

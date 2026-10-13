@@ -31,6 +31,7 @@ import com.mymoney.app.feature.planning.RulesScreen
 import com.mymoney.app.feature.planning.SubscriptionsScreen
 import com.mymoney.app.feature.planning.ToolsScreen
 import com.mymoney.app.feature.reports.InsightTarget
+import com.mymoney.app.lock.PinSetupScreen
 import com.mymoney.app.feature.search.SearchHit
 import com.mymoney.app.feature.search.SearchScreen
 import com.mymoney.app.feature.datahealth.DataHealthScreen
@@ -126,8 +127,10 @@ fun MyMoneyNavHost(
                 onOpenCurrencies = { navController.navigate(CurrenciesRoute) },
                 onOpenRates = { navController.navigate(RatesRoute) },
                 onOpenDataHealth = { navController.navigate(DataHealthRoute) },
+                onPin = { mode -> navController.navigate(PinSetupRoute(mode.name)) },
             )
         }
+        composable<PinSetupRoute> { PinSetupScreen(onDone = back) }
         composable<SearchRoute> {
             SearchScreen(onBack = back, onOpenEntry = openEntry, onOpenHit = { h ->
                 when (h.kind) {

@@ -20,7 +20,10 @@ import com.mymoney.core.designsystem.theme.MyMoneyTheme
 import com.mymoney.core.domain.settings.AppLanguage
 import com.mymoney.core.domain.settings.AppSettings
 import com.mymoney.core.domain.settings.ThemeMode
+import com.mymoney.app.lock.AppLockManager
+import com.mymoney.app.lock.LockScreen
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * Single activity. Extends AppCompatActivity (a FragmentActivity) for per-app locales on API < 33
@@ -31,11 +34,14 @@ class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainViewModel by viewModels()
 
+    @Inject lateinit var lockManager: AppLockManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
             val state by viewModel.state.collectAsStateWithLifecycle()
+            val locked by lockManager.locked.collectAsStateWithLifecycle()
             val settings = state.settings
 
             // FLAG_SECURE hides content from screenshots and the recents preview (setting, default on).
@@ -59,7 +65,12 @@ class MainActivity : AppCompatActivity() {
             }
             MyMoneyTheme(darkTheme = dark, dynamicColor = settings?.dynamicColor == true) {
                 CompositionLocalProvider(LocalFormats provides formats) {
-                    MyMoneyRoot(state = state, onToggleHideAmounts = viewModel::toggleHideAmounts)
+                    // While locked nothing of the app is composed, so no data can show behind the lock screen.
+                    if (locked && state.settings?.onboardingDone == true) {
+                        LockScreen()
+                    } else {
+                        MyMoneyRoot(state = state, onToggleHideAmounts = viewModel::toggleHideAmounts)
+                    }
                 }
             }
         }
