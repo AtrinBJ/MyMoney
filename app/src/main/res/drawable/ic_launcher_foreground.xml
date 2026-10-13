@@ -1,20 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Brand mark: three rising bars over a baseline (replaceable; see docs/06-design-system.md §6.9). -->
+<!--
+    Adaptive-icon foreground: the brand symbol only (M-shaped rising chart with an upward arrow).
+    Traced from the original logo artwork; path coordinates are in the artwork's 1254px space and the group
+    scales them into the 108dp canvas. The symbol spans ~48dp around the center, inside the 66dp safe zone,
+    so circle, squircle and rounded-square launcher masks never clip it. No background, shadow or container:
+    the launcher supplies the shape and the background layer supplies the color.
+-->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <path
-        android:fillColor="#FFFFFFFF"
-        android:pathData="M34,62h8a2,2 0,0 1,2 2v8h-12v-8a2,2 0,0 1,2 -2z" />
-    <path
-        android:fillColor="#FFFFFFFF"
-        android:pathData="M50,50h8a2,2 0,0 1,2 2v20h-12v-20a2,2 0,0 1,2 -2z" />
-    <path
-        android:fillColor="#FFF5BD48"
-        android:pathData="M66,36h8a2,2 0,0 1,2 2v34h-12v-34a2,2 0,0 1,2 -2z" />
-    <path
-        android:fillColor="#FFFFFFFF"
-        android:pathData="M30,74h48v3h-48z" />
+    <group
+        android:scaleX="0.0672"
+        android:scaleY="0.0672"
+        android:translateX="9.72"
+        android:translateY="10.39">
+
+        <!-- Left leg, falling ribbon, rising band and arrow head (one continuous stroke of the M). -->
+        <path android:pathData="M302,565 C302,525 335,495 380,495 C400,495 418,502 433,513 L609,654 L887,414 L818,414 L786,382 C775,371 776,352 792,345 C797,343 802,343 808,343 L995,343 Q1016,343 1016,364 L1016,568 Q1016,590 995,590 Q988,590 983,585 L946,551 L946,480 L640,748 Q624,760 610,760 Q596,760 584,751 L437,632 L437,920 C437,942 423,955 404,955 C349,955 302,906 302,846 Z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:type="linear"
+                    android:startX="1010"
+                    android:startY="350"
+                    android:endX="360"
+                    android:endY="950">
+                    <item android:offset="0" android:color="#FF3EDE99" />
+                    <item android:offset="0.45" android:color="#FF1AA586" />
+                    <item android:offset="1" android:color="#FF0B5F62" />
+                </gradient>
+            </aapt:attr>
+        </path>
+
+        <!-- Fold shading where the ribbon passes over the left leg (inside the silhouette). -->
+        <path android:pathData="M437,632 C398,598 345,668 302,772 L302,846 C302,906 349,955 404,955 C423,955 437,942 437,920 Z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:type="linear"
+                    android:startX="400"
+                    android:startY="620"
+                    android:endX="380"
+                    android:endY="955">
+                    <item android:offset="0" android:color="#FF053F46" />
+                    <item android:offset="1" android:color="#FF0E716C" />
+                </gradient>
+            </aapt:attr>
+        </path>
+
+        <!-- Shading of the rising band below the valley (fades out toward the arrow). -->
+        <path android:pathData="M609,654 C652,684 716,686 760,650 L946,480 L946,474 L887,414 Z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:type="linear"
+                    android:startX="650"
+                    android:startY="660"
+                    android:endX="890"
+                    android:endY="430">
+                    <item android:offset="0" android:color="#990A5F5E" />
+                    <item android:offset="1" android:color="#000A5F5E" />
+                </gradient>
+            </aapt:attr>
+        </path>
+
+        <!-- Three bars. -->
+        <path android:pathData="M496,772 Q496,752 513,757 L597,808 Q607,814 607,826 L607,941 Q607,955 593,955 L510,955 Q496,955 496,941 Z">
+            <aapt:attr name="android:fillColor">
+                <gradient android:type="linear" android:startX="550" android:startY="755" android:endX="550" android:endY="955">
+                    <item android:offset="0" android:color="#FF17A585" />
+                    <item android:offset="1" android:color="#FF06525A" />
+                </gradient>
+            </aapt:attr>
+        </path>
+        <path android:pathData="M653,800 Q653,784 666,775 L752,714 Q771,702 771,722 L771,940 Q771,954 757,954 L667,954 Q653,954 653,940 Z">
+            <aapt:attr name="android:fillColor">
+                <gradient android:type="linear" android:startX="712" android:startY="710" android:endX="712" android:endY="954">
+                    <item android:offset="0" android:color="#FF1DB089" />
+                    <item android:offset="1" android:color="#FF064A53" />
+                </gradient>
+            </aapt:attr>
+        </path>
+        <path android:pathData="M811,665 Q811,648 825,637 L906,573 Q924,560 924,582 L924,850 C924,906 886,951 840,951 C823,951 811,940 811,925 Z">
+            <aapt:attr name="android:fillColor">
+                <gradient android:type="linear" android:startX="900" android:startY="570" android:endX="850" android:endY="950">
+                    <item android:offset="0" android:color="#FF34D296" />
+                    <item android:offset="1" android:color="#FF04434C" />
+                </gradient>
+            </aapt:attr>
+        </path>
+    </group>
 </vector>

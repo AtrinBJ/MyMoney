@@ -1,10 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Themed-icon layer (Android 13+): the same silhouette as ic_launcher_foreground, single solid fill with
+    transparent negative space. Only the alpha channel matters: a supporting launcher tints it with the
+    user's wallpaper/system colors. No brand color is encoded here.
+-->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <path
-        android:fillColor="#FF000000"
-        android:pathData="M34,62h8a2,2 0,0 1,2 2v8h-12v-8a2,2 0,0 1,2 -2zM50,50h8a2,2 0,0 1,2 2v20h-12v-20a2,2 0,0 1,2 -2zM66,36h8a2,2 0,0 1,2 2v34h-12v-34a2,2 0,0 1,2 -2zM30,74h48v3h-48z" />
+    <group
+        android:scaleX="0.0672"
+        android:scaleY="0.0672"
+        android:translateX="9.72"
+        android:translateY="10.39">
+        <path
+            android:fillColor="#FF000000"
+            android:pathData="M302,565 C302,525 335,495 380,495 C400,495 418,502 433,513 L609,654 L887,414 L818,414 L786,382 C775,371 776,352 792,345 C797,343 802,343 808,343 L995,343 Q1016,343 1016,364 L1016,568 Q1016,590 995,590 Q988,590 983,585 L946,551 L946,480 L640,748 Q624,760 610,760 Q596,760 584,751 L437,632 L437,920 C437,942 423,955 404,955 C349,955 302,906 302,846 Z" />
+        <path
+            android:fillColor="#FF000000"
+            android:pathData="M496,772 Q496,752 513,757 L597,808 Q607,814 607,826 L607,941 Q607,955 593,955 L510,955 Q496,955 496,941 Z" />
+        <path
+            android:fillColor="#FF000000"
+            android:pathData="M653,800 Q653,784 666,775 L752,714 Q771,702 771,722 L771,940 Q771,954 757,954 L667,954 Q653,954 653,940 Z" />
+        <path
+            android:fillColor="#FF000000"
+            android:pathData="M811,665 Q811,648 825,637 L906,573 Q924,560 924,582 L924,850 C924,906 886,951 840,951 C823,951 811,940 811,925 Z" />
+    </group>
 </vector>
