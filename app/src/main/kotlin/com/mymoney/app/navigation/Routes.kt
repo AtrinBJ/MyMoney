@@ -78,6 +78,13 @@ data class EntryEditorRoute(
 /** [mode] is a PinSetupMode name: SET, CHANGE or DISABLE. */
 @Serializable data class PinSetupRoute(val mode: String)
 
+// Data
+@Serializable data object BackupRoute
+@Serializable data object ExportRoute
+@Serializable data object ImportRoute
+@Serializable data object TrashRoute
+@Serializable data object DeleteAllRoute
+
 enum class TopLevelDestination(
     val graph: Any,
     val startRoute: KClass<*>,

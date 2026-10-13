@@ -115,5 +115,7 @@ abstract class DataBindsModule {
 
     @Binds abstract fun bindLedgerAnalytics(impl: LedgerAnalyticsImpl): LedgerAnalytics
 
+    @Binds abstract fun bindAttachmentCleaner(impl: com.mymoney.core.data.attachments.AttachmentStore): com.mymoney.core.domain.repository.AttachmentCleaner
+
     @Binds abstract fun bindImportBatches(impl: com.mymoney.core.data.repository.ImportBatchRepositoryImpl): com.mymoney.core.domain.repository.ImportBatchRepository
 }

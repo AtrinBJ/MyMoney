@@ -85,7 +85,7 @@ class Stage4LogicTest {
         h.budgets.save(Budget("food", "Food", BudgetPeriodType.MONTHLY, CalendarType.GREGORIAN, LocalDate.of(2026, 1, 1), amountMinor = 2_000_000, currency = "IRR"))
         expense("e1", 700_000, LocalDate.of(2026, 10, 2))
 
-        val maintenance = DailyMaintenance(h.ledger, h.analytics, h.notificationLog, h.payOccurrence, h.clock)
+        val maintenance = DailyMaintenance(h.ledger, h.analytics, h.notificationLog, h.payOccurrence, h.clock) { 0 }
         val notifier = FakeNotifier()
         val first = maintenance.run(h.provider.snapshot.first(), notifier)
         assertEquals(1, first.autoPosted)
@@ -112,16 +112,16 @@ class Stage4LogicTest {
             ),
         )
         val notifier = FakeNotifier()
-        DailyMaintenance(h.ledger, h.analytics, h.notificationLog, h.payOccurrence, h.clock).run(h.provider.snapshot.first(), notifier)
+        DailyMaintenance(h.ledger, h.analytics, h.notificationLog, h.payOccurrence, h.clock) { 0 }.run(h.provider.snapshot.first(), notifier)
         assertTrue(notifier.shown.isEmpty())
 
         h.settings.update { it.copy(remindersEnabled = true) }
         val blocked = FakeNotifier(allowed = false)
-        val r = DailyMaintenance(h.ledger, h.analytics, h.notificationLog, h.payOccurrence, h.clock).run(h.provider.snapshot.first(), blocked)
+        val r = DailyMaintenance(h.ledger, h.analytics, h.notificationLog, h.payOccurrence, h.clock) { 0 }.run(h.provider.snapshot.first(), blocked)
         assertEquals(0, r.notified)
         // Not marked as sent, so it is shown once notifications are allowed again.
         val later = FakeNotifier()
-        DailyMaintenance(h.ledger, h.analytics, h.notificationLog, h.payOccurrence, h.clock).run(h.provider.snapshot.first(), later)
+        DailyMaintenance(h.ledger, h.analytics, h.notificationLog, h.payOccurrence, h.clock) { 0 }.run(h.provider.snapshot.first(), later)
         assertTrue(later.shown.any { it is Reminder.Due })
     }
 
@@ -156,11 +156,10 @@ class Stage4LogicTest {
     }
 
     @Test
-    fun `backup insight is hidden until backup exists`() = runBlocking {
+    fun `backup insight is shown now that backup exists`() = runBlocking {
         expense("e1", 4_000_000, LocalDate.of(2026, 10, 3))
         val all = ReportBuilder(h.ledger, h.analytics).insights(h.provider.snapshot.first())
-        assertTrue(all.any { it is Insight.BackupOverdue })
-        assertTrue(all.available().none { it is Insight.BackupOverdue })
+        assertTrue(all.available().any { it is Insight.BackupOverdue })
     }
 
     @Test

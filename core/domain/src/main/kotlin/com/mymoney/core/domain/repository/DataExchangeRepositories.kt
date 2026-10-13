@@ -15,6 +15,11 @@ data class ImportBatch(
     val reverted: Boolean,
 )
 
+/** Removes attachment files whose operation was permanently deleted. */
+fun interface AttachmentCleaner {
+    suspend fun purgeOrphans(): Int
+}
+
 interface ImportBatchRepository {
     /** A completed (not reverted) import of the same file content, if any. */
     suspend fun findCompleted(fileSha256: String): ImportBatch?

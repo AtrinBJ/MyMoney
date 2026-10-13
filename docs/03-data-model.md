@@ -297,8 +297,9 @@ WHERE e.deletedAt IS NULL
 
 ## ۳.۵ جدول‌های نسخه ۳
 - **`attachment`:**
-  - فیلدها: `id`، `entryId` (FK با CASCADE)، `storedName` (نام فایل رمزشده در `filesDir/attachments`)، `displayName`، `mimeType`، `sizeBytes`، `sha256` و `createdAt`
-  - **ایندکس:** `INDEX(entryId)`
+  - فیلدها: `id`، `groupId` (ارجاع منطقی به عملیات)، `storedName` (نام تصادفی فایل رمزشده در `filesDir/attachments`)، `displayName`، `mimeType`، `sizeBytes`، `sha256` و `createdAt`
+  - **ایندکس:** `INDEX(groupId)`
+  - **تغییر نسبت به طرح اولیه (مرحله ۵):** پیوست به عملیات (`groupId`) وصل است، نه به یک leg (`entryId`)، تا ویرایش عملیات پیوست را یتیم نکند.
   - **حذف فایل فیزیکی:** هنگام پاک‌سازی دائمی entry انجام می‌شود.
 - **`import_batch`:**
   - فیلدها: `id`، `fileName`، `fileSha256`، `importedAt`، `rowCount`، `importedCount`، `skippedCount`، `accountId` و `status` (`COMPLETED` یا `REVERTED`)

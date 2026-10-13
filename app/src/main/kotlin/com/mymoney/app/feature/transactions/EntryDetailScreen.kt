@@ -241,6 +241,7 @@ private fun DetailBody(s: EntryDetailState, group: EntryGroup, onRefund: (String
                 main.costType?.let { DetailLine(stringResource(R.string.editor_cost_type), stringResource(if (it.name == "FIXED") R.string.editor_fixed else R.string.editor_variable)) }
             }
         }
+        AttachmentsSection()
         val expense = group.entries.singleOrNull { it.kind == EntryKind.EXPENSE && group.entries.size == 1 }
         if (expense != null) {
             val currency = s.accounts[expense.accountId]?.currency ?: formats.baseCurrency

@@ -455,6 +455,8 @@ class BackupManager internal constructor(
         return file
     }
 
+    fun observeHistory(): kotlinx.coroutines.flow.Flow<List<BackupRecordEntity>> = db.backupRecordDao().observeAll()
+
     fun safetyBackups(): List<File> = safetyDir.listFiles { f -> f.name.startsWith("safety-") }?.sortedByDescending { it.name }.orEmpty()
 
     /** Removes temporary restore/backup files and safety backups (used by "delete all data"). */

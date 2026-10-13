@@ -20,6 +20,8 @@ class MyMoneyApp : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
         ProcessLifecycleOwner.get().lifecycle.addObserver(lockManager)
+        // Decrypted attachment copies shown in another app last time are removed (docs/SECURITY.md §Attachments).
+        Thread { com.mymoney.app.feature.transactions.AttachmentsViewModel.clearTemporaryFiles(this) }.start()
         // Daily maintenance always runs (trash purge, AUTO_POST rules); it notifies only if reminders are on.
         // KEEP: an existing schedule (possibly at the user's chosen hour) is left untouched.
         DailyMaintenanceWorker.schedule(this, hour = AppSettings().reminderHour)

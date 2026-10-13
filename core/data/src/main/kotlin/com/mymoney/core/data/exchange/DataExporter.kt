@@ -83,8 +83,9 @@ class DataExporter @Inject constructor(private val db: MyMoneyDatabase) {
     suspend fun exportCsv(out: OutputStream, filter: ExportFilter, labels: ExportLabels, irrUnit: IrrUnit, minorDigits: Map<String, Int>): Int =
         withContext(Dispatchers.IO) {
             var n = 0
+            // UTF-8 byte order mark so Excel opens Persian text correctly.
+            out.write(byteArrayOf(0xEF.toByte(), 0xBB.toByte(), 0xBF.toByte()))
             out.bufferedWriter(Charsets.UTF_8).use { w ->
-                w.write("﻿")
                 w.write(
                     Csv.line(
                         listOf(

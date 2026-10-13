@@ -57,6 +57,7 @@ fun SettingsScreen(
     onOpenRates: () -> Unit,
     onOpenDataHealth: () -> Unit,
     onPin: (PinSetupMode) -> Unit,
+    onData: (Any) -> Unit,
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -65,7 +66,7 @@ fun SettingsScreen(
         onBack = onBack,
         onLanguage = viewModel::setLanguage,
         onUpdate = viewModel::update,
-        links = SettingsLinks(onOpenCategories, onOpenCurrencies, onOpenRates, onOpenDataHealth, onPin),
+        links = SettingsLinks(onOpenCategories, onOpenCurrencies, onOpenRates, onOpenDataHealth, onPin, onData),
     )
 }
 
@@ -76,6 +77,8 @@ data class SettingsLinks(
     val rates: () -> Unit = {},
     val dataHealth: () -> Unit = {},
     val pin: (PinSetupMode) -> Unit = {},
+    /** Opens a data screen; the argument is its navigation route. */
+    val data: (Any) -> Unit = {},
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -188,6 +191,11 @@ internal fun SettingsContent(
             LinkRow(stringResource(R.string.cur_title), links.currencies)
             LinkRow(stringResource(R.string.rate_title), links.rates)
             LinkRow(stringResource(R.string.settings_data_health), links.dataHealth, stringResource(R.string.settings_data_health_d))
+            LinkRow(stringResource(R.string.settings_backup), { links.data(com.mymoney.app.navigation.BackupRoute) }, stringResource(R.string.settings_backup_desc))
+            LinkRow(stringResource(R.string.settings_export), { links.data(com.mymoney.app.navigation.ExportRoute) }, stringResource(R.string.settings_export_desc))
+            LinkRow(stringResource(R.string.settings_import), { links.data(com.mymoney.app.navigation.ImportRoute) }, stringResource(R.string.settings_import_desc))
+            LinkRow(stringResource(R.string.settings_trash), { links.data(com.mymoney.app.navigation.TrashRoute) })
+            LinkRow(stringResource(R.string.settings_wipe), { links.data(com.mymoney.app.navigation.DeleteAllRoute) })
 
             SectionHeader(stringResource(R.string.settings_section_notifications))
             NotificationSettings(s, onUpdate, cancel)

@@ -32,6 +32,11 @@ import com.mymoney.app.feature.planning.SubscriptionsScreen
 import com.mymoney.app.feature.planning.ToolsScreen
 import com.mymoney.app.feature.reports.InsightTarget
 import com.mymoney.app.lock.PinSetupScreen
+import com.mymoney.app.feature.data.BackupScreen
+import com.mymoney.app.feature.data.DeleteAllScreen
+import com.mymoney.app.feature.data.ExportScreen
+import com.mymoney.app.feature.data.ImportScreen
+import com.mymoney.app.feature.data.TrashScreen
 import com.mymoney.app.feature.search.SearchHit
 import com.mymoney.app.feature.search.SearchScreen
 import com.mymoney.app.feature.datahealth.DataHealthScreen
@@ -128,8 +133,14 @@ fun MyMoneyNavHost(
                 onOpenRates = { navController.navigate(RatesRoute) },
                 onOpenDataHealth = { navController.navigate(DataHealthRoute) },
                 onPin = { mode -> navController.navigate(PinSetupRoute(mode.name)) },
+                onData = { target -> navController.navigate(target) },
             )
         }
+        composable<BackupRoute> { BackupScreen(onBack = back) }
+        composable<ExportRoute> { ExportScreen(onBack = back) }
+        composable<ImportRoute> { ImportScreen(onBack = back) }
+        composable<TrashRoute> { TrashScreen(onBack = back) }
+        composable<DeleteAllRoute> { DeleteAllScreen(onBack = back, onBackup = { navController.navigate(BackupRoute) }) }
         composable<PinSetupRoute> { PinSetupScreen(onDone = back) }
         composable<SearchRoute> {
             SearchScreen(onBack = back, onOpenEntry = openEntry, onOpenHit = { h ->
@@ -199,6 +210,7 @@ fun MyMoneyNavHost(
                     InsightTarget.Rules -> navController.navigate(RulesRoute)
                     InsightTarget.Subscriptions -> navController.navigate(SubscriptionsRoute)
                     InsightTarget.Categories -> navController.navigate(CategoryReportRoute)
+                    InsightTarget.Backup -> navController.navigate(BackupRoute)
                 }
             })
         }

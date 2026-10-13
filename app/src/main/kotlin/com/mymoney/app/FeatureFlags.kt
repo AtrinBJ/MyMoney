@@ -5,6 +5,6 @@ package com.mymoney.app
  * refers to it as available (docs/FEATURES_STATUS.md).
  */
 object FeatureFlags {
-    /** Backup & restore (Stage 5). Until then the "backup overdue" insight would point to nothing. */
-    const val BACKUP = false
+    /** Backup & restore (available since Stage 5); enables the "backup overdue" insight. */
+    const val BACKUP = true
 }

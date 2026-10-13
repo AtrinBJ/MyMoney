@@ -235,6 +235,7 @@ sealed interface InsightTarget {
     data object Rules : InsightTarget
     data object Subscriptions : InsightTarget
     data object Categories : InsightTarget
+    data object Backup : InsightTarget
 }
 
 private fun Insight.target(): InsightTarget? = when (this) {
@@ -244,6 +245,7 @@ private fun Insight.target(): InsightTarget? = when (this) {
     is Insight.OverduePayments -> InsightTarget.Rules
     is Insight.Subscriptions -> InsightTarget.Subscriptions
     is Insight.CategorySpike, is Insight.SpendingConcentration -> InsightTarget.Categories
+    is Insight.BackupOverdue -> InsightTarget.Backup
     else -> null
 }
 

@@ -46,10 +46,12 @@ class DailyMaintenance @Inject constructor(
     private val log: NotificationLogRepository,
     private val payOccurrence: PayOccurrenceUseCase,
     private val clock: TimeProvider,
+    private val attachments: com.mymoney.core.domain.repository.AttachmentCleaner,
 ) {
     suspend fun run(s: FinanceSnapshot, notifier: Notifier): MaintenanceReport {
         val now = clock.nowMillis()
         val purged = ledger.purgeDeletedBefore(now - TRASH_DAYS * DAY_MS)
+        if (purged > 0) attachments.purgeOrphans()
         log.purgeOlderThan(now - LOG_KEEP_DAYS * DAY_MS)
 
         val posted = autoPost(s)

@@ -28,7 +28,7 @@ class AttachmentStore internal constructor(
     private val db: MyMoneyDatabase,
     private val ids: IdGenerator,
     private val clock: TimeProvider,
-) {
+) : com.mymoney.core.domain.repository.AttachmentCleaner {
     @Inject constructor(
         @ApplicationContext context: Context,
         crypto: CryptoProvider,
@@ -81,7 +81,7 @@ class AttachmentStore internal constructor(
     }
 
     /** Removes attachments of operations that were permanently deleted. Returns the number removed. */
-    suspend fun purgeOrphans(): Int {
+    override suspend fun purgeOrphans(): Int {
         val orphans = db.attachmentDao().orphans()
         orphans.forEach { delete(it) }
         return orphans.size
