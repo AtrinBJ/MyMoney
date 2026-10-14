@@ -54,6 +54,37 @@ enum class EditorMode { EXPENSE, INCOME, TRANSFER, REFUND, ADJUSTMENT }
 
 data class SplitRow(val categoryId: String? = null, val amount: String = "")
 
+/**
+ * What the user has typed, kept in SavedStateHandle so a form survives the process being killed in the
+ * background (e.g. while the camera or a file picker is open). The group id is kept too, so saving after
+ * a restore is still idempotent (FBR-13).
+ */
+private const val DRAFT_KEY = "editor-draft"
+private val draftJson = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
+
+@kotlinx.serialization.Serializable
+internal data class EditorDraft(
+    val mode: String,
+    val groupId: String,
+    val accountId: String?,
+    val toAccountId: String?,
+    val amount: String,
+    val amountIn: String,
+    val fee: String,
+    val categoryId: String?,
+    val useSplit: Boolean,
+    val splits: List<Pair<String?, String>>,
+    val date: Long,
+    val timeMinutes: Int?,
+    val pending: Boolean,
+    val payee: String,
+    val note: String,
+    val costType: String?,
+    val essential: Boolean?,
+    val tags: Set<String>,
+    val reason: String,
+)
+
 data class EditorState(
     val loading: Boolean = true,
     val isEdit: Boolean = false,
@@ -99,7 +130,7 @@ data class EditorState(
 
 @HiltViewModel
 class EntryEditorViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val accounts: AccountRepository,
     private val categories: CategoryRepository,
     private val tagRepo: TagRepository,
@@ -116,8 +147,29 @@ class EntryEditorViewModel @Inject constructor(
     val state: StateFlow<EditorState> = _state.asStateFlow()
 
     init {
-        viewModelScope.launch { load() }
+        viewModelScope.launch {
+            load()
+            // From here on every change is mirrored into the saved state.
+            _state.collect { if (!it.loading && !it.saved) savedStateHandle[DRAFT_KEY] = draftJson.encodeToString(EditorDraft.serializer(), it.toDraft()) }
+        }
     }
+
+    private fun EditorState.toDraft() = EditorDraft(
+        mode.name, groupId, accountId, toAccountId, amount, amountIn, fee, categoryId, useSplit, splits.map { it.categoryId to it.amount },
+        date.toEpochDay(), timeMinutes, pending, payee, note, costType?.name, essential, selectedTags, reason,
+    )
+
+    private fun EditorState.withDraft(d: EditorDraft) = copy(
+        mode = runCatching { EditorMode.valueOf(d.mode) }.getOrDefault(mode),
+        groupId = d.groupId,
+        accountId = d.accountId?.takeIf { id -> accounts.any { it.id == id } } ?: accountId,
+        toAccountId = d.toAccountId?.takeIf { id -> accounts.any { it.id == id } },
+        amount = d.amount, amountIn = d.amountIn, fee = d.fee,
+        categoryId = d.categoryId, useSplit = d.useSplit, splits = d.splits.map { SplitRow(it.first, it.second) },
+        date = LocalDate.ofEpochDay(d.date), timeMinutes = d.timeMinutes, pending = d.pending,
+        payee = d.payee, note = d.note, costType = d.costType?.let { runCatching { CostType.valueOf(it) }.getOrNull() },
+        essential = d.essential, selectedTags = d.tags, reason = d.reason,
+    )
 
     private suspend fun load() {
         val s = settings.settings.first()
@@ -155,6 +207,9 @@ class EntryEditorViewModel @Inject constructor(
                     payee = original.payee.orEmpty(),
                 )
             }
+        }
+        savedStateHandle.get<String>(DRAFT_KEY)?.let { json ->
+            runCatching { draftJson.decodeFromString(EditorDraft.serializer(), json) }.getOrNull()?.let { st = st.withDraft(it) }
         }
         if (st.mode == EditorMode.ADJUSTMENT) st = st.copy(adjustCurrentMinor = currentBalanceFor(st))
         _state.value = st
@@ -427,4 +482,5 @@ internal fun EditorState.display(minor: Long, accountId: String): String {
     var major = BigDecimal.valueOf(minor, digits)
     if (currency == Currency.IRR && irrUnit == IrrUnit.TOMAN) major = major.movePointLeft(1)
     return major.stripTrailingZeros().toPlainString()
+
 }

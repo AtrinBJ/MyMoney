@@ -2,6 +2,7 @@ package com.mymoney.app.feature.settings
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Column
@@ -66,7 +67,7 @@ fun SettingsScreen(
         onBack = onBack,
         onLanguage = viewModel::setLanguage,
         onUpdate = viewModel::update,
-        links = SettingsLinks(onOpenCategories, onOpenCurrencies, onOpenRates, onOpenDataHealth, onPin, onData),
+        links = SettingsLinks(onOpenCategories, onOpenCurrencies, onOpenRates, onOpenDataHealth, onPin, onData, viewModel::runDebug),
     )
 }
 
@@ -79,6 +80,7 @@ data class SettingsLinks(
     val pin: (PinSetupMode) -> Unit = {},
     /** Opens a data screen; the argument is its navigation route. */
     val data: (Any) -> Unit = {},
+    val debug: (com.mymoney.app.DebugAction) -> Unit = {},
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -217,6 +219,13 @@ internal fun SettingsContent(
 
             SectionHeader(stringResource(R.string.settings_section_privacy))
             SecuritySettings(state, s, onUpdate, links, cancel)
+
+            if (state.debugActions.isNotEmpty()) {
+                // Debug builds only; not translated on purpose.
+                SectionHeader("Developer (debug build)")
+                state.debugActions.forEach { a -> LinkRow(a.label, { links.debug(a) }) }
+                state.debugMessage?.let { Text(it, style = androidx.compose.material3.MaterialTheme.typography.bodySmall, modifier = Modifier.padding(horizontal = 16.dp)) }
+            }
             SwitchRow(
                 title = stringResource(R.string.settings_secure_screen),
                 description = stringResource(R.string.settings_secure_screen_desc),

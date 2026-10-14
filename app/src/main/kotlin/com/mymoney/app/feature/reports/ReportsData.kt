@@ -94,8 +94,9 @@ class ReportBuilder(
                 val points = periods(s).lastN(PeriodType.MONTH, minOf(range.endInclusive, s.today), 12).map { minOf(it.endInclusive, s.today) }
                 val totals = mutableListOf<Long>()
                 val liquid = mutableListOf<Long>()
-                points.forEach { d ->
-                    val bal = analytics.balancesOn(d)
+                val balances = analytics.balancesAt(points)
+                points.forEachIndexed { pi, d ->
+                    val bal = balances[pi]
                     var t = 0L
                     var l = 0L
                     bal.forEach { (id, v) ->
@@ -168,9 +169,11 @@ class ReportBuilder(
         val points = periods(s).lastN(PeriodType.MONTH, minOf(range.endInclusive, s.today), 12).map { minOf(it.endInclusive, s.today) }
         val tradesBy = s.trades.groupBy { it.assetId }
         val valuationsBy = s.valuations.groupBy { it.assetId }
-        val values = points.map { d ->
+        val end = minOf(range.endInclusive, s.today)
+        val balances = analytics.balancesAt(points + listOf(range.start.minusDays(1), end))
+        val values = points.mapIndexed { pi, d ->
             var total = 0L
-            analytics.balancesOn(d).forEach { (id, v) ->
+            balances[pi].forEach { (id, v) ->
                 val acc = s.accountsById[id]?.account ?: return@forEach
                 if (!acc.includeInNetWorth) return@forEach
                 total += s.rateBook.convert(v, acc.currency, s.base, d)?.minor ?: 0
@@ -186,9 +189,8 @@ class ReportBuilder(
             total
         }
         // FX effect over the selected period for foreign-currency accounts.
-        val end = minOf(range.endInclusive, s.today)
-        val startBal = analytics.balancesOn(range.start.minusDays(1))
-        val endBal = analytics.balancesOn(end)
+        val startBal = balances[points.size]
+        val endBal = balances[points.size + 1]
         val flows = ledger.flows(range.start, end).groupBy { it.accountId }
         var fx: Long? = 0L
         s.accounts.map { it.account }.filter { it.currency != s.base && it.includeInNetWorth }.forEach { acc ->

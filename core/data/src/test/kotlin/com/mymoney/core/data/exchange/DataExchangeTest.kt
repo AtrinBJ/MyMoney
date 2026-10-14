@@ -169,4 +169,11 @@ class DataExchangeTest {
         assertTrue(backups.safetyBackups().isEmpty())
         assertFalse(File(root, "attachments").exists())
     }
+
+    @Test
+    fun `balances at many dates in one query equal the per-date query`() = runBlocking {
+        val analytics = com.mymoney.core.data.repository.LedgerAnalyticsImpl(db)
+        val dates = listOf(LocalDate.of(2026, 10, 2), LocalDate.of(2025, 12, 31), LocalDate.of(2026, 10, 1), LocalDate.of(2026, 1, 1), LocalDate.of(2030, 1, 1))
+        assertEquals(dates.map { analytics.balancesOn(it) }, analytics.balancesAt(dates))
+    }
 }

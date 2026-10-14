@@ -338,6 +338,25 @@ class LedgerAnalyticsImpl @Inject constructor(private val db: MyMoneyDatabase) :
 
     override suspend fun pendingByAccount(): Map<String, Long> = dao.pendingByAccount().associate { it.accountId to it.amountMinor }
     override suspend fun balancesOn(date: LocalDate): Map<String, Long> = dao.balancesOn(date.toEpochDay()).associate { it.accountId to it.amountMinor }
+
+    /** One grouped query and running sums instead of one full scan per date (net-worth trend over 100k rows). */
+    override suspend fun balancesAt(dates: List<LocalDate>): List<Map<String, Long>> {
+        if (dates.isEmpty()) return emptyList()
+        val order = dates.indices.sortedBy { dates[it] }
+        val rows = dao.dailyNet(dates.max().toEpochDay())
+        val running = HashMap<String, Long>()
+        val result = arrayOfNulls<Map<String, Long>>(dates.size)
+        var r = 0
+        for (i in order) {
+            val day = dates[i].toEpochDay()
+            while (r < rows.size && rows[r].date <= day) {
+                running.merge(rows[r].accountId, rows[r].amountMinor, Long::plus)
+                r++
+            }
+            result[i] = HashMap(running)
+        }
+        return result.map { it!! }
+    }
     override suspend fun possibleDuplicateCount(since: LocalDate): Int = dao.duplicatePairs(since.toEpochDay())
 
     override suspend fun costTypeRows(from: LocalDate, to: LocalDate): List<com.mymoney.core.domain.repository.CostTypeRow> =

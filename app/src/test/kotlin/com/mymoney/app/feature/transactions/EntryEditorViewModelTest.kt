@@ -86,12 +86,14 @@ class EntryEditorViewModelTest {
         Dispatchers.resetMain()
     }
 
-    private fun viewModel(args: Map<String, Any?>): EntryEditorViewModel {
+    private fun viewModel(args: Map<String, Any?>): EntryEditorViewModel = viewModel(SavedStateHandle(args))
+
+    private fun viewModel(handle: SavedStateHandle): EntryEditorViewModel {
         val categories = CategoryRepositoryImpl(db, ChangeLogger(db.changeLogDao(), ids, clock), ids, clock)
         val currencies = CurrencyRepositoryImpl(db)
         val rates = ExchangeRateRepositoryImpl(db)
         return EntryEditorViewModel(
-            savedStateHandle = SavedStateHandle(args),
+            savedStateHandle = handle,
             accounts = accounts,
             categories = categories,
             tagRepo = TagRepositoryImpl(db, ids, clock),
@@ -187,5 +189,23 @@ class EntryEditorViewModelTest {
         assertEquals(-20_000, runBlocking { ledger.getGroup(groupId)!!.entries.single().amountMinor })
         assertEquals(1, runBlocking { db.entryDao().groupEntries(groupId).size })
         assertEquals(true, runBlocking { prefs.data.first() }.asMap().isEmpty())
+    }
+
+    @Test
+    fun `a half-filled form survives process death with the same operation id`() {
+        val handle = SavedStateHandle(mapOf("mode" to "EXPENSE", "accountId" to "bank"))
+        val before = viewModel(handle)
+        before.awaitLoaded()
+        before.setAmount("42000")
+        before.setCategory(SeedData.categoryId("expense.food"))
+        before.setPayee("نانوایی")
+        runBlocking { repeat(50) { if (handle.get<String>("editor-draft")?.contains("42000") == true) return@runBlocking; Thread.sleep(10) } }
+        // The system recreates the ViewModel from the saved state only.
+        val after = viewModel(handle)
+        after.awaitLoaded()
+        assertEquals(before.state.value.groupId, after.state.value.groupId)
+        assertEquals("42000", after.state.value.amount)
+        assertEquals("نانوایی", after.state.value.payee)
+        assertEquals(SeedData.categoryId("expense.food"), after.state.value.categoryId)
     }
 }

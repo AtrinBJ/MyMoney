@@ -20,6 +20,9 @@ data class SettingsUiState(
     /** The app lock is on exactly when a PIN is stored. */
     val pinSet: Boolean = false,
     val biometricAvailable: Boolean = false,
+    /** Developer actions (debug builds only). */
+    val debugActions: List<com.mymoney.app.DebugAction> = emptyList(),
+    val debugMessage: String? = null,
 )
 
 @HiltViewModel
@@ -28,15 +31,25 @@ class SettingsViewModel @Inject constructor(
     private val localeController: LocaleController,
     private val pins: com.mymoney.core.data.security.PinStore,
     @dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context,
+    private val debugTools: com.mymoney.app.DebugTools,
 ) : ViewModel() {
+    private val debugMessage = kotlinx.coroutines.flow.MutableStateFlow<String?>(null)
 
-    val state: StateFlow<SettingsUiState> = repository.settings
-        .map {
+    fun runDebug(action: com.mymoney.app.DebugAction) {
+        debugMessage.value = "…"
+        viewModelScope.launch { debugMessage.value = runCatching { action.run() }.getOrElse { it.toString() } }
+    }
+
+
+    val state: StateFlow<SettingsUiState> = kotlinx.coroutines.flow.combine(repository.settings, debugMessage) { s, m -> s to m }
+        .map { (it, message) ->
             SettingsUiState(
                 settings = it,
                 language = localeController.current(),
                 pinSet = pins.hasPin(),
                 biometricAvailable = com.mymoney.app.lock.biometricAvailable(context),
+                debugActions = debugTools.actions,
+                debugMessage = message,
             )
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), SettingsUiState())

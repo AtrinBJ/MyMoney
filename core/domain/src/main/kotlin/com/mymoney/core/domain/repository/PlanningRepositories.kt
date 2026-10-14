@@ -100,6 +100,9 @@ interface LedgerAnalytics {
     /** Balance of every account on [date] (end of day). */
     suspend fun balancesOn(date: LocalDate): Map<String, Long>
 
+    /** Balances at several dates (same order as [dates]); implementations should read the ledger once. */
+    suspend fun balancesAt(dates: List<LocalDate>): List<Map<String, Long>> = dates.map { balancesOn(it) }
+
     /** Count of groups flagged by FBR-36 in the last [days] days. */
     suspend fun possibleDuplicateCount(since: LocalDate): Int
 

@@ -19,7 +19,7 @@
 | [docs/08-decisions-and-risks.md](docs/08-decisions-and-risks.md) | تصمیم‌های طراحی و ریسک‌ها |
 | [docs/FEATURES_STATUS.md](docs/FEATURES_STATUS.md) | قابلیت‌های تکمیل‌شده و باقی‌مانده |
 
-راهنمای ساخت: [BUILD.md](BUILD.md). امنیت: [docs/SECURITY.md](docs/SECURITY.md). پشتیبان‌گیری، بازیابی و ورود و خروج داده: [docs/BACKUP_RESTORE.md](docs/BACKUP_RESTORE.md). چک‌لیست کیفیت (`QA_CHECKLIST.md`) در مرحله ۶ اضافه می‌شود.
+راهنمای ساخت: [BUILD.md](BUILD.md). امنیت: [docs/SECURITY.md](docs/SECURITY.md). پشتیبان‌گیری، بازیابی و ورود و خروج داده: [docs/BACKUP_RESTORE.md](docs/BACKUP_RESTORE.md). چک‌لیست کیفیت: [docs/QA_CHECKLIST.md](docs/QA_CHECKLIST.md).
 
 ## مجوزهای شخص ثالث
 - فونت Vazirmatn — SIL Open Font License 1.1 (`core/designsystem/src/main/assets/licenses/Vazirmatn-OFL.txt`)

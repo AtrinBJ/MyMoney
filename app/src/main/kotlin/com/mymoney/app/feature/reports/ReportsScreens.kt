@@ -392,7 +392,7 @@ private fun AmountRow(label: String, minor: Long, currency: String, color: Amoun
     Row(Modifier.fillMaxWidth().padding(vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
         Text(label, style = if (bold) MaterialTheme.typography.titleSmall else MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
         trailing?.let { it(); Spacer(Modifier.width(MyMoneyTheme.spacing.s)) }
-        MoneyText(minor, currency, style = if (bold) MaterialTheme.typography.titleSmall else MaterialTheme.typography.bodyMedium, color = color)
+        MoneyText(minor, currency, Modifier.weight(1f, fill = false), style = if (bold) MaterialTheme.typography.titleSmall else MaterialTheme.typography.bodyMedium, color = color)
     }
 }
 

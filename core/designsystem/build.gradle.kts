@@ -33,6 +33,7 @@ dependencies {
     api(project(":core:domain"))
 
     api(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.savedstate.compose)
     api(libs.androidx.compose.ui)
     api(libs.androidx.compose.ui.graphics)
     api(libs.androidx.compose.foundation)

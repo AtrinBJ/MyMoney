@@ -19,6 +19,11 @@ class MyMoneyApp : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
+        if (BuildConfig.DEBUG) {
+            // Debug only: report disk/network work on the main thread and leaked resources in logcat.
+            android.os.StrictMode.setThreadPolicy(android.os.StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build())
+            android.os.StrictMode.setVmPolicy(android.os.StrictMode.VmPolicy.Builder().detectLeakedClosableObjects().detectLeakedSqlLiteObjects().detectActivityLeaks().penaltyLog().build())
+        }
         ProcessLifecycleOwner.get().lifecycle.addObserver(lockManager)
         // Decrypted attachment copies shown in another app last time are removed (docs/SECURITY.md §Attachments).
         Thread { com.mymoney.app.feature.transactions.AttachmentsViewModel.clearTemporaryFiles(this) }.start()

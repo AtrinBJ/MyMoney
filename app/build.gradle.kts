@@ -16,7 +16,8 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "0.3.0"
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        // Hilt test application for on-device tests (src/androidTest/HiltTestRunner).
+        testInstrumentationRunner = "com.mymoney.app.HiltTestRunner"
         // Galaxy A55 is arm64; x86_64 keeps emulator support. Drops ~2/3 of SQLCipher's native size.
         ndk { abiFilters += listOf("arm64-v8a", "x86_64") }
     }
@@ -102,4 +103,7 @@ dependencies {
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    androidTestImplementation(libs.hilt.android.testing)
+    androidTestImplementation(libs.kotlin.test)
+    kspAndroidTest(libs.hilt.compiler)
 }

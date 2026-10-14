@@ -217,6 +217,12 @@ interface AnalyticsDao {
     )
     suspend fun balancesOn(day: Long): List<AccountSum>
 
+    @Query(
+        """SELECT accountId, date, SUM(amountMinor) AS amountMinor FROM entry
+           WHERE deletedAt IS NULL AND status = 'COMPLETED' AND date <= :maxDay GROUP BY accountId, date ORDER BY date""",
+    )
+    suspend fun dailyNet(maxDay: Long): List<AccountDaySum>
+
     /** Pairs of entries matching FBR-36 (same account, kind, amount, payee; ≤1 day apart). */
     @Query(
         """SELECT COUNT(*) FROM entry a JOIN entry b
@@ -236,3 +242,5 @@ interface AnalyticsDao {
     )
     suspend fun costTypes(fromDay: Long, toDay: Long): List<CostTypeRowDb>
 }
+
+data class AccountDaySum(val accountId: String, val date: Long, val amountMinor: Long)

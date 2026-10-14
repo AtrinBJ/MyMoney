@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -109,7 +110,8 @@ fun EntryRowItem(row: EntryListRow, onClick: () -> Unit, modifier: Modifier = Mo
             null
         },
         trailingContent = {
-            Column(horizontalAlignment = Alignment.End) {
+            // Bounded so a very large amount shrinks instead of squeezing the title (MoneyText auto-sizes).
+            Column(Modifier.widthIn(max = 168.dp), horizontalAlignment = Alignment.End) {
                 MoneyText(row.amountMinor, row.currency, color = color, style = MaterialTheme.typography.bodyLarge)
                 row.timeMinutes?.let {
                     Text(

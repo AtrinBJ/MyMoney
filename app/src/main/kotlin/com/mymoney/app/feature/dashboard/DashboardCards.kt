@@ -76,7 +76,7 @@ internal fun ForecastCard(f: Forecast, base: String) {
 private fun Line(@StringRes label: Int, minor: Long, base: String) {
     Row(Modifier.fillMaxWidth().padding(vertical = 2.dp)) {
         Text(stringResource(label), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.weight(1f))
-        MoneyText(minor, base, style = MaterialTheme.typography.bodySmall, color = AmountColor.SIGNED)
+        MoneyText(minor, base, Modifier.weight(1f, fill = false), style = MaterialTheme.typography.bodySmall, color = AmountColor.SIGNED)
     }
 }
 
@@ -116,7 +116,7 @@ internal fun UpcomingCard(due: List<Occurrence>, onOpen: () -> Unit) {
                         color = if (overdue) MyMoneyTheme.finance.expense else MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
-                MoneyText(o.outstandingMinor, o.rule.currency, color = if (o.rule.kind == RuleKind.INCOME) AmountColor.INCOME else AmountColor.NEUTRAL)
+                MoneyText(o.outstandingMinor, o.rule.currency, Modifier.weight(1f, fill = false), color = if (o.rule.kind == RuleKind.INCOME) AmountColor.INCOME else AmountColor.NEUTRAL)
             }
         }
         if (due.size > 5) {

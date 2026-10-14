@@ -15,6 +15,7 @@
 ## نکته شبکه (مهم)
 از شبکه این سیستم `dl.google.com` برای فایل‌های اندروید پاسخ **404** می‌دهد. CDN رسمی گوگل `edgedl.me.gvt1.com` همان فایل‌ها را ارائه می‌کند:
 - **وابستگی‌های Gradle:** در `settings.gradle.kts` بعد از `google()` مخزن `https://edgedl.me.gvt1.com/android/maven2/` اضافه شده است؛ کاری لازم نیست.
+- **وضعیت ۱۴ مهر ۱۴۰۵ (2026-10-14):** `edgedl.me.gvt1.com` به همه درخواست‌ها پاسخ **403** می‌دهد. ساخت با کش Gradle کار می‌کند (همه وابستگی‌های فعلی کش شده‌اند)؛ افزودن یا تغییر نسخه کتابخانه‌های گوگل تا رفع این مشکل ممکن نیست. وابستگی‌های Maven Central (مثل Dagger و Tink) مشکلی ندارند.
 - **sdkmanager:** قبل از اجرا متغیر زیر را تنظیم کنید:
   ```powershell
   $env:SDK_TEST_BASE_URL = "https://edgedl.me.gvt1.com/android/repository/"
