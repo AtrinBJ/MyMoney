@@ -22,8 +22,8 @@ Get the APK from the [Releases](../../releases) page, open it on your phone and 
 (Android 8.0 or newer; allow "Install unknown apps" for your browser or file manager when asked).
 
 > Released APKs are signed with the project's own release key, so later versions install as updates.
-> If Google Play Protect shows a warning for an app from outside the Play Store, choose **More details ›
-> Install anyway**. To build and sign your own copy, see [BUILD.md](BUILD.md#امضا).
+> Google Play Protect may say "App blocked to protect your device" because it hasn't seen this developer
+> before; tap **Install anyway** (not "Got it"). To build and sign your own copy, see [BUILD.md](BUILD.md#امضا).
 
 ## Highlights
 - **Your data stays on your phone.** No internet permission at all; nothing is sent anywhere. Data leaves the

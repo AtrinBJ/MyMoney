@@ -11,6 +11,11 @@
 ## نسخه فعلی
 **1.0.0-rc.1**: تغییرات در [CHANGELOG.md](CHANGELOG.md) آمده است. برای ساخت خروجی‌ها (APK و AAB) دستور `gradlew dist` را اجرا کنید؛ [BUILD.md](BUILD.md) را ببینید.
 
+## دانلود و نصب
+فایل APK را از صفحه [Releases](../../releases) بگیرید، روی گوشی بازش کنید و **Install** را بزنید (اندروید ۸ به بالا).
+اگر Google Play Protect پیغام «App blocked to protect your device» داد، علتش این است که گوگل این سازنده را هنوز
+نمی‌شناسد. در همان پنجره **Install anyway** را بزنید (نه «Got it»).
+
 ## مستندات
 | سند | محتوا |
 |---|---|
