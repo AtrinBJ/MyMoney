@@ -50,7 +50,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
-import net.zetetic.database.sqlcipher.SupportOpenHelperFactory
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -67,9 +66,9 @@ object DataProvidesModule {
         @ApplicationContext context: Context,
         keyProvider: DbKeyProvider,
     ): MyMoneyDatabase {
-        System.loadLibrary("sqlcipher")
+        // Native library + Keystore key are loaded on first use, off the main thread (DeferredOpenHelperFactory).
         return Room.databaseBuilder(context, MyMoneyDatabase::class.java, MyMoneyDatabase.FILE_NAME)
-            .openHelperFactory(SupportOpenHelperFactory(keyProvider.sqlCipherPassphrase()))
+            .openHelperFactory(com.mymoney.core.data.db.DeferredOpenHelperFactory { keyProvider.sqlCipherPassphrase() })
             .addCallback(MyMoneyDatabase.SeedCallback)
             .build()
     }

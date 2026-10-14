@@ -10,12 +10,11 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlinx.coroutines.runBlocking
-import net.zetetic.database.sqlcipher.SupportOpenHelperFactory
 import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
 
-/** Runs on a real device: the database file on disk must not be readable as plain SQLite. */
+/** Runs on a real device: the database file on disk must not be readable as plain SQLite (production open path). */
 @RunWith(AndroidJUnit4::class)
 class EncryptedDatabaseTest {
     private val context: Context = ApplicationProvider.getApplicationContext()
@@ -28,10 +27,9 @@ class EncryptedDatabaseTest {
 
     @Test
     fun databaseFileIsEncryptedAndReopensWithSameKey() {
-        System.loadLibrary("sqlcipher")
         val keys = DbKeyProvider(context, CryptoProvider(context))
         fun open() = Room.databaseBuilder(context, MyMoneyDatabase::class.java, name)
-            .openHelperFactory(SupportOpenHelperFactory(keys.sqlCipherPassphrase()))
+            .openHelperFactory(DeferredOpenHelperFactory { keys.sqlCipherPassphrase() }) // same path as the app
             .addCallback(MyMoneyDatabase.SeedCallback)
             .build()
 
