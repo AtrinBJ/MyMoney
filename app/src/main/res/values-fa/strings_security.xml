@@ -4,7 +4,7 @@
     <string name="lock_wrong">رمز اشتباه است</string>
     <string name="lock_wrong_left">رمز اشتباه است. %1$s تلاش دیگر تا انتظار کوتاه باقی است.</string>
     <string name="lock_wait">تلاش‌های ناموفق زیاد بود. %1$s ثانیه دیگر دوباره امتحان کنید.</string>
-    <string name="lock_use_biometric">استفاده از اثر انگشت</string>
+    <string name="lock_use_biometric">اثر انگشت، چهره یا قفل گوشی</string>
     <string name="lock_use_pin">استفاده از رمز</string>
     <string name="lock_biometric_title">باز کردن قفل برنامه</string>
     <string name="lock_delete">پاک کردن رقم</string>
@@ -23,12 +23,17 @@
     <string name="pin_locked_out">تلاش‌های ناموفق زیاد بود. کمی صبر کنید و دوباره امتحان کنید.</string>
     <string name="settings_app_lock">قفل برنامه</string>
     <string name="settings_app_lock_desc">هنگام باز شدن برنامه رمز خواسته شود</string>
-    <string name="settings_biometric">باز کردن با اثر انگشت</string>
-    <string name="settings_biometric_desc">از حسگر زیستی امن دستگاه استفاده می‌کند؛ رمز همچنان کار می‌کند</string>
-    <string name="settings_biometric_unavailable">روی این دستگاه حسگر زیستی امن تنظیم نشده است</string>
+    <string name="settings_biometric">باز کردن با اثر انگشت، چهره یا قفل گوشی</string>
+    <string name="settings_biometric_desc">از روش‌های گوشی استفاده می‌کند: اثر انگشت، چهره یا قفل صفحه خود گوشی. رمز برنامه هم همیشه کار می‌کند.</string>
+    <string name="settings_biometric_unavailable">ابتدا در تنظیمات گوشی اثر انگشت، چهره یا قفل صفحه را فعال کنید</string>
     <string name="settings_auto_lock">قفل دوباره پس از</string>
     <string name="settings_auto_lock_now">بلافاصله</string>
     <string name="settings_auto_lock_restart">فقط با باز شدن دوباره برنامه</string>
     <string name="settings_auto_lock_minutes">%1$s دقیقه در پس‌زمینه</string>
     <string name="lock_digits_entered">%1$d رقم وارد شده</string>
+    <string name="lock_biometric_subtitle">با اثر انگشت، چهره یا قفل صفحه گوشی</string>
+    <string name="pin_offer_biometric_title">با اثر انگشت یا چهره هم باز شود؟</string>
+    <string name="pin_offer_biometric_text">برای باز کردن سریع‌تر برنامه از اثر انگشت، چهره یا قفل صفحه گوشی استفاده شود. رمز جدید شما هم همیشه کار می‌کند.</string>
+    <string name="pin_offer_biometric_yes">بله، استفاده شود</string>
+    <string name="pin_offer_biometric_no">فعلاً نه</string>
 </resources>

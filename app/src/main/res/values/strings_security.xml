@@ -4,7 +4,7 @@
     <string name="lock_wrong">Wrong PIN</string>
     <string name="lock_wrong_left">Wrong PIN. %1$s tries left before a short wait.</string>
     <string name="lock_wait">Too many tries. Try again in %1$s seconds.</string>
-    <string name="lock_use_biometric">Use fingerprint</string>
+    <string name="lock_use_biometric">Fingerprint, face or phone lock</string>
     <string name="lock_use_pin">Use PIN</string>
     <string name="lock_biometric_title">Unlock the app</string>
     <string name="lock_delete">Delete digit</string>
@@ -23,12 +23,17 @@
     <string name="pin_locked_out">Too many tries. Wait a moment and try again.</string>
     <string name="settings_app_lock">App lock</string>
     <string name="settings_app_lock_desc">Ask for a PIN when the app opens</string>
-    <string name="settings_biometric">Unlock with fingerprint</string>
-    <string name="settings_biometric_desc">Uses the device\'s strong biometrics; the PIN still works</string>
-    <string name="settings_biometric_unavailable">No strong biometric is set up on this device</string>
+    <string name="settings_biometric">Unlock with fingerprint, face or phone lock</string>
+    <string name="settings_biometric_desc">Uses what your phone offers: fingerprint, face or its own screen lock. The app PIN always works too.</string>
+    <string name="settings_biometric_unavailable">Set up a fingerprint, face or screen lock in your phone settings first</string>
     <string name="settings_auto_lock">Lock again after</string>
     <string name="settings_auto_lock_now">Immediately</string>
     <string name="settings_auto_lock_restart">Only when the app restarts</string>
     <string name="settings_auto_lock_minutes">%1$s minutes in the background</string>
     <string name="lock_digits_entered">%1$d digits entered</string>
+    <string name="lock_biometric_subtitle">Use your fingerprint, face or phone screen lock</string>
+    <string name="pin_offer_biometric_title">Also unlock with fingerprint or face?</string>
+    <string name="pin_offer_biometric_text">Use your phone\'s fingerprint, face or screen lock to open the app faster. Your new PIN always works too.</string>
+    <string name="pin_offer_biometric_yes">Yes, use it</string>
+    <string name="pin_offer_biometric_no">Not now</string>
 </resources>

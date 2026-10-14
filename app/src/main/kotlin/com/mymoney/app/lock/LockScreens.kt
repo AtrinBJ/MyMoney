@@ -1,7 +1,8 @@
 package com.mymoney.app.lock
 
 import androidx.biometric.BiometricManager
-import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
+import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK
+import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 import androidx.biometric.BiometricPrompt
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -78,8 +79,16 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+/**
+ * What may unlock the app besides its own PIN: any fingerprint or face the phone offers to apps (class 2 included,
+ * so Samsung face unlock works where exposed), and on Android 11+ the phone's own screen lock. The app lock is a UI
+ * gate; the data key is not tied to biometrics (docs/SECURITY.md §App lock), so the weaker class is acceptable.
+ */
+internal fun unlockAuthenticators(): Int =
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) BIOMETRIC_WEAK or DEVICE_CREDENTIAL else BIOMETRIC_WEAK
+
 fun biometricAvailable(context: android.content.Context): Boolean =
-    BiometricManager.from(context).canAuthenticate(BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_SUCCESS
+    BiometricManager.from(context).canAuthenticate(unlockAuthenticators()) == BiometricManager.BIOMETRIC_SUCCESS
 
 // ------------------------------------------------------------------------------------------------
 // Lock screen
@@ -149,6 +158,7 @@ fun LockScreen(viewModel: LockViewModel = hiltViewModel()) {
     val context = LocalContext.current
     val title = stringResource(R.string.lock_biometric_title)
     val usePin = stringResource(R.string.lock_use_pin)
+    val subtitle = stringResource(R.string.lock_biometric_subtitle)
     val showBiometric = s.biometric && remember { biometricAvailable(context) }
     val prompt: () -> Unit = {
         (context as? FragmentActivity)?.let { activity ->
@@ -161,8 +171,10 @@ fun LockScreen(viewModel: LockViewModel = hiltViewModel()) {
             ).authenticate(
                 BiometricPrompt.PromptInfo.Builder()
                     .setTitle(title)
-                    .setNegativeButtonText(usePin)
-                    .setAllowedAuthenticators(BIOMETRIC_STRONG)
+                    .setSubtitle(subtitle)
+                    .setAllowedAuthenticators(unlockAuthenticators())
+                    // With the phone's screen lock allowed the system shows its own fallback; otherwise "Use PIN".
+                    .apply { if (unlockAuthenticators() and DEVICE_CREDENTIAL == 0) setNegativeButtonText(usePin) }
                     .build(),
             )
         }
@@ -281,7 +293,7 @@ private fun Key(label: String?, enabled: Boolean, description: String? = null, o
 
 enum class PinSetupMode { SET, CHANGE, DISABLE }
 
-enum class PinStep { CURRENT, NEW, CONFIRM, DONE }
+enum class PinStep { CURRENT, NEW, CONFIRM, OFFER_BIOMETRIC, DONE }
 
 data class PinSetupState(
     val step: PinStep,
@@ -298,6 +310,9 @@ class PinSetupViewModel @Inject constructor(
     private val lock: AppLockManager,
 ) : ViewModel() {
     val mode: PinSetupMode = PinSetupMode.valueOf(savedState.toRoute<PinSetupRoute>().mode)
+
+    /** Set by the screen: whether the phone has a fingerprint, face or screen lock to offer after a new PIN. */
+    var canOfferBiometric: Boolean = false
     private val digits = StringBuilder()
     private var newPin: String? = null
     private val _state = MutableStateFlow(PinSetupState(if (mode == PinSetupMode.SET) PinStep.NEW else PinStep.CURRENT))
@@ -358,10 +373,18 @@ class PinSetupViewModel @Inject constructor(
                     withContext(Dispatchers.Default) { pins.setPin(pin) }
                     settings.update { it.copy(lockEnabled = true) }
                     lock.unlock()
-                    _state.update { it.copy(step = PinStep.DONE, checking = false) }
+                    val alreadyOn = settings.settings.first().biometricEnabled
+                    _state.update { it.copy(step = if (mode == PinSetupMode.SET && canOfferBiometric && !alreadyOn) PinStep.OFFER_BIOMETRIC else PinStep.DONE, checking = false) }
                 }
             }
-            PinStep.DONE -> Unit
+            PinStep.OFFER_BIOMETRIC, PinStep.DONE -> Unit
+        }
+    }
+
+    fun answerBiometricOffer(accept: Boolean) {
+        viewModelScope.launch {
+            if (accept) settings.update { it.copy(biometricEnabled = true) }
+            _state.update { it.copy(step = PinStep.DONE) }
         }
     }
 }
@@ -369,6 +392,8 @@ class PinSetupViewModel @Inject constructor(
 @Composable
 fun PinSetupScreen(onDone: () -> Unit, viewModel: PinSetupViewModel = hiltViewModel()) {
     val s by viewModel.state.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    LaunchedEffect(Unit) { viewModel.canOfferBiometric = biometricAvailable(context) }
     LaunchedEffect(s.step) { if (s.step == PinStep.DONE) onDone() }
     val title = stringResource(
         when (viewModel.mode) {
@@ -378,6 +403,26 @@ fun PinSetupScreen(onDone: () -> Unit, viewModel: PinSetupViewModel = hiltViewMo
         },
     )
     Scaffold(topBar = { BackTopBar(title, onDone) }) { padding ->
+        if (s.step == PinStep.OFFER_BIOMETRIC) {
+            Column(
+                Modifier.fillMaxSize().padding(padding).padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Icon(Icons.Outlined.Fingerprint, contentDescription = null, modifier = Modifier.size(72.dp), tint = MaterialTheme.colorScheme.primary)
+                Spacer(Modifier.height(16.dp))
+                Text(stringResource(R.string.pin_offer_biometric_title), style = MaterialTheme.typography.titleLarge, textAlign = TextAlign.Center)
+                Text(
+                    stringResource(R.string.pin_offer_biometric_text), style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 8.dp, bottom = 24.dp),
+                )
+                androidx.compose.material3.Button(onClick = { viewModel.answerBiometricOffer(true) }, modifier = Modifier.fillMaxWidth()) {
+                    Text(stringResource(R.string.pin_offer_biometric_yes))
+                }
+                TextButton(onClick = { viewModel.answerBiometricOffer(false) }) { Text(stringResource(R.string.pin_offer_biometric_no)) }
+            }
+            return@Scaffold
+        }
         Column(
             Modifier.fillMaxSize().padding(padding).padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -389,7 +434,7 @@ fun PinSetupScreen(onDone: () -> Unit, viewModel: PinSetupViewModel = hiltViewMo
                         PinStep.CURRENT -> R.string.pin_enter_current
                         PinStep.NEW -> R.string.pin_enter_new
                         PinStep.CONFIRM -> R.string.pin_enter_again
-                        PinStep.DONE -> R.string.pin_done
+                        PinStep.OFFER_BIOMETRIC, PinStep.DONE -> R.string.pin_done
                     },
                 ),
                 style = MaterialTheme.typography.titleMedium,
