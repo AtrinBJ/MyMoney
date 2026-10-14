@@ -17,10 +17,23 @@ PERF=1 ./gradlew :app:testDebugUnitTest --tests "*PerformanceBenchmarkTest*"   #
 | Release با R8 و resource shrinking (APK بدون امضا حدود ۸ مگابایت) | ✅ |
 | Manifest نهایی release: بدون INTERNET، CAMERA و FOREGROUND_SERVICE؛ `allowBackup=false` | ✅ |
 | R8: کلاس‌های SQLCipher (JNI)، Tink، `MyMoneyDatabase_Impl` و Worker بدون تغییر نام؛ حذف `android.util.Log` | ✅ (بررسی mapping) |
-| `EncryptedDatabaseTest`: فایل DB با «SQLite format 3» شروع نمی‌شود | 📱 |
-| `DeviceMigrationTest`: مهاجرت 1→2→3 روی SQLite دستگاه | 📱 |
-| `KeystoreBackedTest`: رکورد PIN، پیوست و پشتیبان رمزدار و دستگاهی با کلید واقعی Keystore | 📱 |
-| `OnDeviceAppTest`: شروع برنامه، و باز شدن PDF با `PdfRenderer` | 📱 |
+| `EncryptedDatabaseTest`: فایل DB با «SQLite format 3» شروع نمی‌شود | ✅ A55 |
+| `DeviceMigrationTest`: مهاجرت 1→2→3 روی SQLite دستگاه | ✅ A55 |
+| `KeystoreBackedTest`: رکورد PIN، پیوست و پشتیبان رمزدار و دستگاهی با کلید واقعی Keystore | ✅ A55 |
+| `OnDeviceAppTest`: شروع برنامه، و باز شدن PDF با `PdfRenderer` | ✅ A55 |
+
+## ۱.۱ نتایج روی Galaxy A55 (SM-A556E، Android 16، One UI 8.5) — ۲۲ مهر ۱۴۰۵
+| بررسی | نتیجه |
+|---|---|
+| `connectedDebugAndroidTest`: ۵ آزمون (رمز بودن DB، مهاجرت، PIN و پیوست و پشتیبان با Keystore، شروع برنامه و PDF) | ✅ همه موفق |
+| نصب نسخه release (`-DEBUGSIGNED`) | ✅ |
+| زمان شروع سرد release (`am start -W`، سه بار) | ✅ ۲۳۶، ۲۱۲ و ۲۰۴ میلی‌ثانیه |
+| خطا یا crash در logcat هنگام شروع | ✅ هیچ |
+| FLAG_SECURE: اسکرین‌شات از برنامه سیاه است | ✅ |
+| بارگذاری آیکون توسط launcher سامسونگ | ✅ (Themed icons در تنظیمات گوشی خاموش است، پس هنوز دیده نشده) |
+
+- **یافته در اجرای روی گوشی:** دو آزمون app در حالت تست Hilt دو DataStore روی یک فایل باز می‌کردند. این مشکل فقط مربوط به محیط تست است، چون برنامه واقعی در هر فرایند فقط یک DataStore دارد. دو آزمون در یک متد ادغام شدند.
+- **سایر نکات:** آزمون Keystore به دلیل خطای امضای متد JUnit اجرا نمی‌شد که اصلاح شد.
 
 ## ۲. عملکرد (۱۰۰ هزار تراکنش)
 نتایج روی JVM (Robolectric، SQLite بدون رمز، CPU لپ‌تاپ) فقط شاخص هستند:

@@ -33,13 +33,14 @@ class OnDeviceAppTest {
     @Before
     fun inject() = hilt.inject()
 
+    /**
+     * One test method on purpose: Hilt's test mode builds a new singleton graph per test method, which would
+     * open a second settings DataStore on the same file in the same process (something the real app never does).
+     */
     @Test
-    fun appStartsAndShowsAScreen() {
+    fun appStartsAndPdfStatementOpensWithPdfRenderer() {
         compose.waitUntil(10_000) { compose.onAllNodes(isRoot()).fetchSemanticsNodes().isNotEmpty() }
-    }
 
-    @Test
-    fun pdfStatementOpensWithPdfRenderer() {
         val file = File(compose.activity.cacheDir, "qa-statement.pdf")
         runBlocking { file.outputStream().use { pdf.write(it, ExportFilter()) } }
         ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY).use { fd ->

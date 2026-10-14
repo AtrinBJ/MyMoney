@@ -63,7 +63,7 @@ class KeystoreBackedTest {
     }
 
     @Test
-    fun attachmentsAndBackupsWithRealKeys() = runBlocking {
+    fun attachmentsAndBackupsWithRealKeys(): Unit = runBlocking {
         val db = Room.inMemoryDatabaseBuilder(context, MyMoneyDatabase::class.java).addCallback(MyMoneyDatabase.SeedCallback).build()
         try {
             val attachments = AttachmentStore(File(root, "att"), { crypto.streamingAead }, db, ids, clock)
