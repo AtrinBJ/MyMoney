@@ -1,0 +1,13 @@
+MyMoney
+Copyright 2026 The MyMoney authors
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+It includes or uses the following third-party works:
+
+- Vazirmatn font, Copyright The Vazirmatn Project Authors (Saber Rastikerdar).
+  SIL Open Font License 1.1 (core/designsystem/src/main/assets/licenses/Vazirmatn-OFL.txt).
+- Jalali calendar conversion ported from jalaali-js. MIT License.
+- AndroidX / Jetpack Compose / Material 3 / Room / WorkManager / DataStore / Biometric,
+  Kotlin and kotlinx libraries, Dagger/Hilt, Google Tink. Apache License 2.0.
+- SQLCipher for Android, Copyright Zetetic LLC. BSD-style license.

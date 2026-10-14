@@ -9,8 +9,8 @@
 | Android Studio (اختیاری) | نسخه پایدار 2026.2 یا جدیدتر | برای باز کردن پروژه و اجرا روی گوشی |
 
 روی این سیستم نصب شده‌اند در:
-- JDK: `C:\Users\at690\Android\jdk-21`
-- SDK: `C:\Users\at690\AppData\Local\Android\Sdk` (همان مسیر پیش‌فرض Android Studio)
+- JDK: `%USERPROFILE%\Android\jdk-21`
+- SDK: `%LOCALAPPDATA%\Android\Sdk` (همان مسیر پیش‌فرض Android Studio)
 
 ## نکته شبکه (مهم)
 از شبکه این سیستم `dl.google.com` برای فایل‌های اندروید پاسخ **404** می‌دهد. CDN رسمی گوگل `edgedl.me.gvt1.com` همان فایل‌ها را ارائه می‌کند:
@@ -24,8 +24,8 @@
 
 ## ساخت از خط فرمان (PowerShell)
 ```powershell
-$env:JAVA_HOME = "C:\Users\at690\Android\jdk-21"
-cd "C:\Users\at690\Downloads\claude code\MyMoney"
+$env:JAVA_HOME = "$env:USERPROFILE\Android\jdk-21"
+cd path\to\MyMoney
 .\gradlew.bat assembleDebug
 ```
 خروجی: `app\build\outputs\apk\debug\app-debug.apk` (شناسه `com.mymoney.app.debug`، جدا از نسخه release نصب می‌شود).
@@ -58,7 +58,7 @@ File › Open › پوشه `MyMoney`. Studio خودش wrapper و SDK را پید
 | فایل | کاربرد |
 |---|---|
 | `MyMoney-<نسخه>-debug.apk` | نسخه آزمایشی (`com.mymoney.app.debug`)، شامل بخش Developer و ابزار داده آزمایشی؛ کنار نسخه اصلی نصب می‌شود |
-| `MyMoney-<نسخه>-release[-DEBUGSIGNED].apk` | نسخه نهایی، با R8 و حذف لاگ، بدون هیچ داده یا ابزار آزمایشی |
+| `MyMoney-<نسخه>.apk` | نسخه نهایی، با R8 و حذف لاگ، بدون هیچ داده یا ابزار آزمایشی |
 | `MyMoney-<نسخه>-release[-DEBUGSIGNED].aab` | برای انتشار در فروشگاه (Google Play یا Bazaar/Myket با پشتیبانی AAB) |
 | `MyMoney-<نسخه>-mapping.txt` | برای خواندن stack trace خطاهای release (`retrace`) — آن را نگه دارید ولی منتشر نکنید |
 
@@ -80,12 +80,12 @@ File › Open › پوشه `MyMoney`. Studio خودش wrapper و SDK را پید
 - **ساخت امضاشده:** پس از آن، `.\gradlew.bat dist` خروجی امضاشده با همین کلید و بدون پسوند `-DEBUGSIGNED` می‌سازد.
 - **بررسی امضا:**
   ```powershell
-  & "$env:LOCALAPPDATA\Android\Sdkuild-tools.0.0pksigner.bat" verify --print-certs dist\MyMoney-1.0.0-rc.1-release.apk
+  & "$env:LOCALAPPDATA\Android\Sdkuild-tools.0.0pksigner.bat" verify --print-certs dist\MyMoney-1.0.0-rc.1.apk
   ```
 
 ### نصب نسخه release روی گوشی
 ```powershell
-& "$env:LOCALAPPDATA\Android\Sdk\platform-toolsdb.exe" install -r dist\MyMoney-1.0.0-rc.1-release-DEBUGSIGNED.apk
+& "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe" install -r dist\MyMoney-1.0.0-rc.1.apk
 ```
 - **حذف پیش از نصب:** اگر نسخه‌ای با کلید دیگر نصب شده باشد، اندروید نصب را رد می‌کند و باید ابتدا آن را حذف کنید. حذف برنامه همه داده‌اش را پاک می‌کند، پس پیش از آن از داخل برنامه پشتیبان بگیرید.
 - **نسخه debug:** شناسه جداگانه دارد و با نسخه release تداخلی ندارد.

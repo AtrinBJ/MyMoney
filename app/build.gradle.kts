@@ -30,8 +30,8 @@ android {
         versionName = appVersionName
         // Hilt test application for on-device tests (src/androidTest/HiltTestRunner).
         testInstrumentationRunner = "com.mymoney.app.HiltTestRunner"
-        // Galaxy A55 is arm64; x86_64 keeps emulator support. Drops ~2/3 of SQLCipher's native size.
-        ndk { abiFilters += listOf("arm64-v8a", "x86_64") }
+        // arm64 for today's phones, armeabi-v7a for older 32-bit ones, x86_64 for emulators.
+        ndk { abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64") }
     }
 
     signingConfigs {
@@ -146,7 +146,9 @@ tasks.register<Copy>("dist") {
     val suffix = releaseSuffix
     into(rootProject.layout.projectDirectory.dir("dist"))
     from(layout.buildDirectory.file("outputs/apk/debug/app-debug.apk")) { rename { "MyMoney-$v-debug.apk" } }
-    from(layout.buildDirectory.file("outputs/apk/release/app-release.apk")) { rename { "MyMoney-$v-$suffix.apk" } }
+    // The APK to share: tap to install. Without keystore.properties it is signed with this computer's debug
+    // key, so later updates must be built on the same computer (BUILD.md, Signing).
+    from(layout.buildDirectory.file("outputs/apk/release/app-release.apk")) { rename { "MyMoney-$v.apk" } }
     from(layout.buildDirectory.file("outputs/bundle/release/app-release.aab")) { rename { "MyMoney-$v-$suffix.aab" } }
     from(layout.buildDirectory.file("outputs/mapping/release/mapping.txt")) { rename { "MyMoney-$v-mapping.txt" } }
 }
