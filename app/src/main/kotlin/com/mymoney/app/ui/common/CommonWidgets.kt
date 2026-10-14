@@ -70,6 +70,15 @@ fun BackTopBar(title: String, onBack: () -> Unit, actions: @Composable () -> Uni
     )
 }
 
+/**
+ * "Save" in the top bar of an editor. Long forms keep their bottom Save button too, but that one is often below
+ * the fold (and under the keyboard); this one is always visible.
+ */
+@Composable
+fun SaveAction(enabled: Boolean, onClick: () -> Unit) {
+    TextButton(onClick = onClick, enabled = enabled) { Text(stringResource(R.string.action_save)) }
+}
+
 /** One row of the transaction list (docs/05). Transfers show "from → to"; pending rows are labeled. */
 @Composable
 fun EntryRowItem(row: EntryListRow, onClick: () -> Unit, modifier: Modifier = Modifier) {

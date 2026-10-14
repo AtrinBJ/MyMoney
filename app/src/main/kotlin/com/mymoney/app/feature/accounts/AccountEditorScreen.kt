@@ -46,6 +46,7 @@ import androidx.navigation.toRoute
 import com.mymoney.app.R
 import com.mymoney.app.navigation.AccountEditorRoute
 import com.mymoney.app.ui.common.BackTopBar
+import com.mymoney.app.ui.common.SaveAction
 import com.mymoney.app.ui.common.DateField
 import com.mymoney.app.ui.common.PickerField
 import com.mymoney.app.ui.common.accountTypeLabel
@@ -193,7 +194,9 @@ fun AccountEditorScreen(onDone: (savedId: String?) -> Unit, viewModel: AccountEd
     val spacing = MyMoneyTheme.spacing
     val formats = LocalFormats.current
 
-    Scaffold(topBar = { BackTopBar(stringResource(if (s.isNew) R.string.acc_new else R.string.acc_edit), { onDone(null) }) }) { padding ->
+    Scaffold(topBar = { BackTopBar(stringResource(if (s.isNew) R.string.acc_new else R.string.acc_edit), { onDone(null) }) {
+        if (!s.loading) SaveAction(!s.saving && s.name.isNotBlank(), viewModel::save)
+    } }) { padding ->
         if (s.loading) {
             LoadingSkeleton(Modifier.padding(padding))
             return@Scaffold

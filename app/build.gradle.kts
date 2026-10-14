@@ -16,7 +16,7 @@ val keystoreProps: Properties? = rootProject.file("keystore.properties").takeIf 
     f.inputStream().use { props.load(it) }
     props
 }
-val appVersionName = "1.0.0-rc.1"
+val appVersionName = "1.0.0-rc.2"
 
 android {
     namespace = "com.mymoney.app"
@@ -26,7 +26,7 @@ android {
         applicationId = "com.mymoney.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 10
+        versionCode = 11
         versionName = appVersionName
         // Hilt test application for on-device tests (src/androidTest/HiltTestRunner).
         testInstrumentationRunner = "com.mymoney.app.HiltTestRunner"

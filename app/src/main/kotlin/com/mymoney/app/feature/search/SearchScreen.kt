@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -122,7 +124,8 @@ fun SearchScreen(
     val spacing = MyMoneyTheme.spacing
     Scaffold(
         topBar = {
-            androidx.compose.foundation.layout.Row(Modifier.fillMaxWidth().padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
+            // statusBarsPadding: keep the field below the status bar and the camera cut-out (edge-to-edge window).
+            androidx.compose.foundation.layout.Row(Modifier.fillMaxWidth().statusBarsPadding().displayCutoutPadding().padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.action_back)) }
                 OutlinedTextField(
                     value = q,

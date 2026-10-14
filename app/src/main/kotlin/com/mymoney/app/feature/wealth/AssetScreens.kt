@@ -52,6 +52,7 @@ import com.mymoney.app.data.FinanceSnapshotProvider
 import com.mymoney.app.navigation.AssetDetailRoute
 import com.mymoney.app.navigation.AssetEditorRoute
 import com.mymoney.app.ui.common.BackTopBar
+import com.mymoney.app.ui.common.SaveAction
 import com.mymoney.app.ui.common.ConfirmDialog
 import com.mymoney.app.ui.common.DateField
 import com.mymoney.app.ui.common.errorMessage
@@ -189,7 +190,9 @@ fun AssetEditorScreen(onDone: () -> Unit, viewModel: AssetEditorViewModel = hilt
     val formats = LocalFormats.current
     LaunchedEffect(s.done) { if (s.done) onDone() }
     val spacing = MyMoneyTheme.spacing
-    Scaffold(topBar = { BackTopBar(stringResource(if (s.original == null) R.string.asset_new else R.string.asset_edit), onDone) }) { padding ->
+    Scaffold(topBar = { BackTopBar(stringResource(if (s.original == null) R.string.asset_new else R.string.asset_edit), onDone) {
+        SaveAction(s.name.isNotBlank()) { viewModel.save(formats) }
+    } }) { padding ->
         if (s.loading) { LoadingSkeleton(Modifier.padding(padding)); return@Scaffold }
         val isNew = s.original == null
         Column(

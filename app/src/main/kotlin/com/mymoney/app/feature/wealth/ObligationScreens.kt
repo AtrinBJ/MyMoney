@@ -61,6 +61,7 @@ import com.mymoney.app.feature.transactions.TransactionsScreen
 import com.mymoney.app.navigation.ObligationDetailRoute
 import com.mymoney.app.navigation.ObligationEditorRoute
 import com.mymoney.app.ui.common.BackTopBar
+import com.mymoney.app.ui.common.SaveAction
 import com.mymoney.app.ui.common.CategoryPickerSheet
 import com.mymoney.app.ui.common.ConfirmDialog
 import com.mymoney.app.ui.common.DateField
@@ -297,7 +298,9 @@ fun ObligationEditorScreen(onDone: () -> Unit, viewModel: ObligationEditorViewMo
     var pickCategory by rememberSaveable { mutableStateOf(false) }
     LaunchedEffect(s.done) { if (s.done) onDone() }
     val spacing = MyMoneyTheme.spacing
-    Scaffold(topBar = { BackTopBar(stringResource(if (s.receivable) R.string.ob_add_receivable else R.string.ob_add_debt), onDone) }) { padding ->
+    Scaffold(topBar = { BackTopBar(stringResource(if (s.receivable) R.string.ob_add_receivable else R.string.ob_add_debt), onDone) {
+        SaveAction(s.counterparty.isNotBlank() || s.name.isNotBlank()) { viewModel.save(formats) }
+    } }) { padding ->
         Column(
             Modifier.fillMaxSize().padding(padding).imePadding().verticalScroll(rememberScrollState()).padding(spacing.screenPadding),
             verticalArrangement = Arrangement.spacedBy(spacing.m),

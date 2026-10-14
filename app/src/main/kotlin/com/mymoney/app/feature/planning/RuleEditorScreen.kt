@@ -41,6 +41,7 @@ import com.mymoney.app.R
 import com.mymoney.app.navigation.RuleEditorRoute
 import com.mymoney.app.ui.common.AccountPickerSheet
 import com.mymoney.app.ui.common.BackTopBar
+import com.mymoney.app.ui.common.SaveAction
 import com.mymoney.app.ui.common.CategoryPickerSheet
 import com.mymoney.app.ui.common.ConfirmDialog
 import com.mymoney.app.ui.common.DateField
@@ -222,6 +223,7 @@ fun RuleEditorScreen(onDone: () -> Unit, viewModel: RuleEditorViewModel = hiltVi
     Scaffold(topBar = {
         BackTopBar(stringResource(if (s.original == null) R.string.rule_add else R.string.rule_edit), onDone) {
             if (s.original != null) IconButton(onClick = { confirmDelete = true }) { Icon(Icons.Outlined.Delete, stringResource(R.string.action_delete)) }
+            if (!s.loading) SaveAction(s.name.isNotBlank()) { viewModel.save(formats) }
         }
     }) { padding ->
         if (s.loading) { LoadingSkeleton(Modifier.padding(padding)); return@Scaffold }

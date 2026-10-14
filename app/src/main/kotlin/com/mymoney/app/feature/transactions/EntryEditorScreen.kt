@@ -46,6 +46,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mymoney.app.R
 import com.mymoney.app.ui.common.AccountPickerSheet
 import com.mymoney.app.ui.common.BackTopBar
+import com.mymoney.app.ui.common.SaveAction
 import com.mymoney.app.ui.common.CategoryPickerSheet
 import com.mymoney.app.ui.common.DateField
 import com.mymoney.app.ui.common.PickerField
@@ -75,7 +76,9 @@ fun EntryEditorScreen(onDone: () -> Unit, viewModel: EntryEditorViewModel = hilt
             }
         },
     )
-    Scaffold(topBar = { BackTopBar(title, onDone) }) { padding ->
+    Scaffold(topBar = {
+        BackTopBar(title, onDone) { if (!state.loading) SaveAction(!state.saving) { viewModel.save() } }
+    }) { padding ->
         if (state.loading) {
             LoadingSkeleton(Modifier.padding(padding))
             return@Scaffold

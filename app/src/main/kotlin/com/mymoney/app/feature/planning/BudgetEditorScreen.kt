@@ -39,6 +39,7 @@ import androidx.navigation.toRoute
 import com.mymoney.app.R
 import com.mymoney.app.navigation.BudgetEditorRoute
 import com.mymoney.app.ui.common.BackTopBar
+import com.mymoney.app.ui.common.SaveAction
 import com.mymoney.app.ui.common.DateField
 import com.mymoney.app.ui.common.OptionalDateField
 import com.mymoney.app.ui.common.categoryLabel
@@ -173,6 +174,7 @@ fun BudgetEditorScreen(onDone: () -> Unit, viewModel: BudgetEditorViewModel = hi
                 IconButton(onClick = viewModel::archive) { Icon(Icons.Outlined.Archive, stringResource(R.string.acc_archive)) }
                 IconButton(onClick = viewModel::delete) { Icon(Icons.Outlined.Delete, stringResource(R.string.action_delete)) }
             }
+            if (!s.loading) SaveAction(s.name.isNotBlank(), viewModel::save)
         }
     }) { padding ->
         if (s.loading) { LoadingSkeleton(Modifier.padding(padding)); return@Scaffold }

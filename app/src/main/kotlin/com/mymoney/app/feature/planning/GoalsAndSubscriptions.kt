@@ -51,6 +51,7 @@ import com.mymoney.app.data.FinanceSnapshotProvider
 import com.mymoney.app.navigation.GoalDetailRoute
 import com.mymoney.app.navigation.GoalEditorRoute
 import com.mymoney.app.ui.common.BackTopBar
+import com.mymoney.app.ui.common.SaveAction
 import com.mymoney.app.ui.common.ConfirmDialog
 import com.mymoney.app.ui.common.OptionalDateField
 import com.mymoney.app.ui.common.editableAmount
@@ -352,7 +353,9 @@ fun GoalEditorScreen(onDone: () -> Unit, viewModel: GoalEditorViewModel = hiltVi
     LaunchedEffect(s.savedId) { if (s.savedId != null) onDone() }
     LaunchedEffect(s.loading) { if (!s.loading) viewModel.prefill(formats) }
     val spacing = MyMoneyTheme.spacing
-    Scaffold(topBar = { BackTopBar(stringResource(if (s.original == null) R.string.goal_new else R.string.goal_edit), onDone) }) { padding ->
+    Scaffold(topBar = { BackTopBar(stringResource(if (s.original == null) R.string.goal_new else R.string.goal_edit), onDone) {
+        SaveAction(s.name.isNotBlank()) { viewModel.save(formats) }
+    } }) { padding ->
         if (s.loading) { LoadingSkeleton(Modifier.padding(padding)); return@Scaffold }
         Column(
             Modifier.fillMaxSize().padding(padding).imePadding().verticalScroll(rememberScrollState()).padding(spacing.screenPadding),
