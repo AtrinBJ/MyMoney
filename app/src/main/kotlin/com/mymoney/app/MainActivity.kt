@@ -63,8 +63,10 @@ class MainActivity : AppCompatActivity() {
             val formats = remember(settings, state.currencies, language) {
                 Formats(settings ?: AppSettings(), language, state.currencies)
             }
-            MyMoneyTheme(darkTheme = dark, dynamicColor = settings?.dynamicColor == true) {
+            MyMoneyTheme(darkTheme = dark, dynamicColor = settings?.dynamicColor == true, glass = settings?.glassEffects ?: true) {
                 CompositionLocalProvider(LocalFormats provides formats) {
+                    // Ambient colours behind onboarding, the lock screen and every screen without its own.
+                    com.mymoney.core.designsystem.theme.AmbientBackground()
                     // While locked nothing of the app is composed, so no data can show behind the lock screen.
                     if (locked && state.settings?.onboardingDone == true) {
                         LockScreen()

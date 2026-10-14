@@ -93,11 +93,14 @@ class ScreenshotHarness {
 }
 
 @Composable
-fun ScreenFrame(formats: Formats, dark: Boolean = false, content: @Composable () -> Unit) {
+fun ScreenFrame(formats: Formats, dark: Boolean = false, glass: Boolean = true, content: @Composable () -> Unit) {
     val dir = if (formats.language == AppLanguage.FA) LayoutDirection.Rtl else LayoutDirection.Ltr
-    MyMoneyTheme(darkTheme = dark) {
+    MyMoneyTheme(darkTheme = dark, glass = glass) {
         CompositionLocalProvider(LocalFormats provides formats, LocalLayoutDirection provides dir) {
-            androidx.compose.material3.Surface(color = androidx.compose.material3.MaterialTheme.colorScheme.background) { content() }
+            androidx.compose.foundation.layout.Box {
+                com.mymoney.core.designsystem.theme.AmbientBackground()
+                content()
+            }
         }
     }
 }

@@ -187,6 +187,12 @@ internal fun SettingsContent(
                 onCheckedChange = { v -> onUpdate { it.copy(dynamicColor = v) } },
                 enabled = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S,
             )
+            SwitchRow(
+                title = stringResource(R.string.settings_glass),
+                description = stringResource(R.string.settings_glass_desc),
+                checked = s.glassEffects,
+                onCheckedChange = { v -> onUpdate { it.copy(glassEffects = v) } },
+            )
 
             SectionHeader(stringResource(R.string.settings_section_data))
             LinkRow(stringResource(R.string.cat_title), links.categories)

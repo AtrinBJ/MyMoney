@@ -1,6 +1,14 @@
 package com.mymoney.app.ui
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import com.mymoney.core.designsystem.theme.AmbientBackground
+import com.mymoney.core.designsystem.theme.backdropSource
+import com.mymoney.core.designsystem.theme.rememberBackdrop
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Search
@@ -67,51 +75,49 @@ private fun MainScaffold(
     val currentTab = TopLevelDestination.entries.firstOrNull { tab -> destination?.hasRoute(tab.startRoute) == true }
     val snackbar = remember { SnackbarHostState() }
 
+    // Everything under the bars is recorded once per frame; the bars draw it blurred (glass).
+    val backdrop = rememberBackdrop()
+
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             if (currentTab != null) {
-                CenterAlignedTopAppBar(
-                    title = { Text(stringResource(currentTab.label)) },
-                    navigationIcon = {
-                        IconButton(onClick = onToggleHideAmounts) {
-                            Icon(
-                                if (hideAmounts) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility,
-                                contentDescription = stringResource(if (hideAmounts) R.string.action_show_amounts else R.string.action_hide_amounts),
-                            )
-                        }
-                    },
-                    actions = {
-                        IconButton(onClick = { navController.navigate(SearchRoute) }) {
-                            Icon(Icons.Outlined.Search, contentDescription = stringResource(R.string.action_search))
-                        }
-                        IconButton(onClick = { navController.navigate(SettingsRoute) }) {
-                            Icon(Icons.Outlined.Settings, contentDescription = stringResource(R.string.action_settings))
-                        }
-                    },
-                )
+                GlassTopBar(backdrop) {
+                    CenterAlignedTopAppBar(
+                        title = { Text(stringResource(currentTab.label)) },
+                        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.Transparent, scrolledContainerColor = Color.Transparent),
+                        navigationIcon = {
+                            IconButton(onClick = onToggleHideAmounts) {
+                                Icon(
+                                    if (hideAmounts) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility,
+                                    contentDescription = stringResource(if (hideAmounts) R.string.action_show_amounts else R.string.action_hide_amounts),
+                                )
+                            }
+                        },
+                        actions = {
+                            IconButton(onClick = { navController.navigate(SearchRoute) }) {
+                                Icon(Icons.Outlined.Search, contentDescription = stringResource(R.string.action_search))
+                            }
+                            IconButton(onClick = { navController.navigate(SettingsRoute) }) {
+                                Icon(Icons.Outlined.Settings, contentDescription = stringResource(R.string.action_settings))
+                            }
+                        },
+                    )
+                }
             }
         },
         bottomBar = {
             if (currentTab != null) {
-                NavigationBar {
-                    TopLevelDestination.entries.forEach { tab ->
-                        val selected = destination.isOnTab(tab)
-                        NavigationBarItem(
-                            selected = selected,
-                            onClick = { navController.navigateToTab(tab) },
-                            icon = { Icon(if (selected) tab.selectedIcon else tab.unselectedIcon, contentDescription = null) },
-                            label = { Text(stringResource(tab.label), maxLines = 1) },
-                        )
-                    }
-                }
+                GlassNavBar(selected = TopLevelDestination.entries.firstOrNull { destination.isOnTab(it) }, onSelect = { navController.navigateToTab(it) }, backdrop = backdrop)
             }
         },
         floatingActionButton = {
+            val fabShape = RoundedCornerShape(22.dp)
             when (currentTab) {
-                TopLevelDestination.HOME, TopLevelDestination.TRANSACTIONS -> FloatingActionButton(onClick = { navController.navigate(EntryEditorRoute()) }) {
+                TopLevelDestination.HOME, TopLevelDestination.TRANSACTIONS -> FloatingActionButton(onClick = { navController.navigate(EntryEditorRoute()) }, shape = fabShape) {
                     Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.action_quick_add))
                 }
-                TopLevelDestination.WEALTH -> FloatingActionButton(onClick = { navController.navigate(AccountEditorRoute()) }) {
+                TopLevelDestination.WEALTH -> FloatingActionButton(onClick = { navController.navigate(AccountEditorRoute()) }, shape = fabShape) {
                     Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.acc_add))
                 }
                 else -> Unit
@@ -119,7 +125,10 @@ private fun MainScaffold(
         },
         snackbarHost = { SnackbarHost(snackbar) },
     ) { padding ->
-        MyMoneyNavHost(navController = navController, contentPadding = padding, snackbar = snackbar)
+        Box(Modifier.fillMaxSize().backdropSource(backdrop)) {
+            AmbientBackground()
+            MyMoneyNavHost(navController = navController, contentPadding = padding, snackbar = snackbar)
+        }
     }
 }
 

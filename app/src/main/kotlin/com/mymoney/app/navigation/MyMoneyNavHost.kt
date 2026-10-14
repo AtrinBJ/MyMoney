@@ -32,6 +32,12 @@ import com.mymoney.app.feature.planning.SubscriptionsScreen
 import com.mymoney.app.feature.planning.ToolsScreen
 import com.mymoney.app.feature.reports.InsightTarget
 import com.mymoney.app.lock.PinSetupScreen
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import com.mymoney.app.feature.data.BackupScreen
 import com.mymoney.app.feature.data.DeleteAllScreen
 import com.mymoney.app.feature.data.ExportScreen
@@ -67,7 +73,16 @@ fun MyMoneyNavHost(
     val openEntry: (String) -> Unit = { navController.navigate(EntryDetailRoute(it)) }
     val back: () -> Unit = { navController.popBackStack() }
 
-    NavHost(navController = navController, startDestination = HomeGraph, modifier = modifier) {
+    // Soft transitions: fade with a slight spring scale (screens are see-through in glass mode).
+    NavHost(
+        navController = navController,
+        startDestination = HomeGraph,
+        modifier = modifier,
+        enterTransition = { fadeIn(tween(220)) + scaleIn(spring(dampingRatio = 0.8f, stiffness = 400f), initialScale = 0.97f) },
+        exitTransition = { fadeOut(tween(160)) },
+        popEnterTransition = { fadeIn(tween(220)) },
+        popExitTransition = { fadeOut(tween(160)) + scaleOut(spring(dampingRatio = 0.8f, stiffness = 400f), targetScale = 0.97f) },
+    ) {
         navigation<HomeGraph>(startDestination = HomeRoute) {
             composable<HomeRoute> {
                 DashboardScreen(

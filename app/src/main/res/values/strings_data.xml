@@ -147,4 +147,6 @@
     <string name="about_licenses">Open-source licenses</string>
     <string name="about_show_ofl">Show the Vazirmatn font license</string>
     <string name="settings_about">About and licenses</string>
+    <string name="settings_glass">Glass effects</string>
+    <string name="settings_glass_desc">Translucent, softly blurred surfaces. Turn off for solid, higher-contrast screens.</string>
 </resources>

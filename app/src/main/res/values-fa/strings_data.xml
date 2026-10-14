@@ -147,4 +147,6 @@
     <string name="about_licenses">مجوزهای متن‌باز</string>
     <string name="about_show_ofl">نمایش مجوز فونت وزیرمتن</string>
     <string name="settings_about">درباره و مجوزها</string>
+    <string name="settings_glass">جلوه‌های شیشه‌ای</string>
+    <string name="settings_glass_desc">سطوح نیمه‌شفاف با تاری ملایم. برای صفحه‌های مات و پرکنتراست‌تر خاموش کنید.</string>
 </resources>

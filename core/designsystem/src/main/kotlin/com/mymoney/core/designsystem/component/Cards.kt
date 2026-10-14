@@ -25,7 +25,18 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.material3.ripple
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import com.mymoney.core.designsystem.theme.glass
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.mymoney.core.designsystem.format.LocalFormats
@@ -33,7 +44,11 @@ import com.mymoney.core.designsystem.theme.MyMoneyTheme
 import com.mymoney.core.domain.money.Digits
 import kotlin.math.abs
 
-/** Standard content card: tonal surface, 20dp corners, optional title row with an action. */
+/**
+ * Standard content card. With glass on: a frosted translucent panel with a light edge and a soft, diffuse
+ * shadow; tappable cards sink slightly under the finger (spring). A custom [containerColor] keeps its hue
+ * but becomes translucent too. Glass off: the classic solid tonal card.
+ */
 @Composable
 fun SectionCard(
     modifier: Modifier = Modifier,
@@ -41,27 +56,34 @@ fun SectionCard(
     actionLabel: String? = null,
     onAction: (() -> Unit)? = null,
     onClick: (() -> Unit)? = null,
-    containerColor: Color = MaterialTheme.colorScheme.surfaceContainerLow,
+    containerColor: Color = Color.Unspecified,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    val cardModifier = if (onClick != null) modifier.clickable(role = Role.Button, onClick = onClick) else modifier
-    Card(
-        modifier = cardModifier.fillMaxWidth(),
-        shape = MaterialTheme.shapes.large,
-        colors = CardDefaults.cardColors(containerColor = containerColor),
-    ) {
-        Column(Modifier.padding(MyMoneyTheme.spacing.l)) {
-            if (title != null) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(title, style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
-                    if (actionLabel != null && onAction != null) {
-                        TextButton(onClick = onAction) { Text(actionLabel) }
-                    }
+    val glass = MyMoneyTheme.glass
+    val shape = MaterialTheme.shapes.large
+    val fill = when {
+        containerColor == Color.Unspecified -> glass.cardTint
+        glass.enabled -> containerColor.copy(alpha = 0.72f)
+        else -> containerColor
+    }
+    val interaction = remember { MutableInteractionSource() }
+    val pressed by interaction.collectIsPressedAsState()
+    val scale by animateFloatAsState(if (pressed) 0.975f else 1f, spring(dampingRatio = 0.55f, stiffness = 500f), label = "press")
+    var m = modifier.fillMaxWidth().graphicsLayer { scaleX = scale; scaleY = scale }
+    if (glass.enabled) m = m.shadow(18.dp, shape, ambientColor = glass.shadow, spotColor = glass.shadow)
+    m = m.glass(glass, shape, tint = fill)
+    if (onClick != null) m = m.clip(shape).clickable(interactionSource = interaction, indication = ripple(), role = Role.Button, onClick = onClick)
+    Column(m.padding(MyMoneyTheme.spacing.l)) {
+        if (title != null) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(title, style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
+                if (actionLabel != null && onAction != null) {
+                    TextButton(onClick = onAction) { Text(actionLabel) }
                 }
-                Spacer(Modifier.size(MyMoneyTheme.spacing.s))
             }
-            content()
+            Spacer(Modifier.size(MyMoneyTheme.spacing.s))
         }
+        content()
     }
 }
 

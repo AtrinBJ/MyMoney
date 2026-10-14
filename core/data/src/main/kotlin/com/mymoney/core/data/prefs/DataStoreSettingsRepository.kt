@@ -48,6 +48,7 @@ class DataStoreSettingsRepository @Inject constructor(
         val IRR_UNIT = stringPreferencesKey("irrDisplayUnit")
         val THEME = stringPreferencesKey("themeMode")
         val DYNAMIC_COLOR = booleanPreferencesKey("dynamicColor")
+        val GLASS = booleanPreferencesKey("glassEffects")
         val HIDE_AMOUNTS = booleanPreferencesKey("hideAmounts")
         val HIDE_ON_START = booleanPreferencesKey("hideAmountsOnStart")
         val SECURE_SCREEN = booleanPreferencesKey("secureScreen")
@@ -74,6 +75,7 @@ class DataStoreSettingsRepository @Inject constructor(
                 irrUnit = p.enum(IRR_UNIT, d.irrUnit),
                 themeMode = p.enum(THEME, d.themeMode),
                 dynamicColor = p[DYNAMIC_COLOR] ?: d.dynamicColor,
+                glassEffects = p[GLASS] ?: d.glassEffects,
                 hideAmounts = p[HIDE_AMOUNTS] ?: d.hideAmounts,
                 hideAmountsOnStart = p[HIDE_ON_START] ?: d.hideAmountsOnStart,
                 secureScreen = p[SECURE_SCREEN] ?: d.secureScreen,
@@ -97,6 +99,7 @@ class DataStoreSettingsRepository @Inject constructor(
             p[IRR_UNIT] = s.irrUnit.name
             p[THEME] = s.themeMode.name
             p[DYNAMIC_COLOR] = s.dynamicColor
+            p[GLASS] = s.glassEffects
             p[HIDE_AMOUNTS] = s.hideAmounts
             p[HIDE_ON_START] = s.hideAmountsOnStart
             p[SECURE_SCREEN] = s.secureScreen

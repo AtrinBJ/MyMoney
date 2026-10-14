@@ -39,6 +39,8 @@ data class AppSettings(
     val irrUnit: IrrUnit = IrrUnit.TOMAN,
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val dynamicColor: Boolean = false,
+    /** Translucent "liquid glass" surfaces and blurred bars; off = solid, high-contrast surfaces. */
+    val glassEffects: Boolean = true,
     val hideAmounts: Boolean = false,
     val hideAmountsOnStart: Boolean = false,
     val secureScreen: Boolean = true,

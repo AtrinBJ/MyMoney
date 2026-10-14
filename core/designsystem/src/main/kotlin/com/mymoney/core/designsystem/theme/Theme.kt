@@ -11,6 +11,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val LightScheme = with(BrandPalette) {
@@ -57,9 +58,11 @@ private val DarkScheme = with(BrandPalette) {
 fun MyMoneyTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = false,
+    /** "Glass effects" setting: ambient background, translucent surfaces, blurred bars. */
+    glass: Boolean = false,
     content: @Composable () -> Unit,
 ) {
-    val colorScheme: ColorScheme = when {
+    val base: ColorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
@@ -67,9 +70,13 @@ fun MyMoneyTheme(
         darkTheme -> DarkScheme
         else -> LightScheme
     }
+    // With glass, screens and plain surfaces are see-through so the ambient background shows; dialogs, sheets and
+    // menus keep their opaque container colours.
+    val colorScheme = if (glass) base.copy(background = Color.Transparent, surface = Color.Transparent) else base
     CompositionLocalProvider(
         LocalFinanceColors provides if (darkTheme) DarkFinanceColors else LightFinanceColors,
         LocalSpacing provides Spacing(),
+        LocalGlass provides GlassStyle(enabled = glass, dark = darkTheme),
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
@@ -86,4 +93,6 @@ object MyMoneyTheme {
         @Composable @ReadOnlyComposable get() = LocalFinanceColors.current
     val spacing: Spacing
         @Composable @ReadOnlyComposable get() = LocalSpacing.current
+    val glass: GlassStyle
+        @Composable @ReadOnlyComposable get() = LocalGlass.current
 }
