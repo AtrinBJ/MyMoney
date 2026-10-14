@@ -21,8 +21,9 @@ bills and subscriptions, debts and receivables, assets, savings goals, reports a
 Get the APK from the [Releases](../../releases) page, open it on your phone and tap **Install**
 (Android 8.0 or newer; allow "Install unknown apps" for your browser or file manager when asked).
 
-> The release APK is signed with the author's development key, which is fine for installing and sharing.
-> Updates must come from the same source; see [BUILD.md](BUILD.md#امضا) to sign builds with your own key.
+> Released APKs are signed with the project's own release key, so later versions install as updates.
+> If Google Play Protect shows a warning for an app from outside the Play Store, choose **More details ›
+> Install anyway**. To build and sign your own copy, see [BUILD.md](BUILD.md#امضا).
 
 ## Highlights
 - **Your data stays on your phone.** No internet permission at all; nothing is sent anywhere. Data leaves the
