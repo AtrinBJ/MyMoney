@@ -30,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
@@ -55,7 +56,7 @@ fun GlassNavBar(selected: TopLevelDestination?, onSelect: (TopLevelDestination) 
         BoxWithConstraints(
             Modifier.fillMaxWidth().height(66.dp)
                 .shadow(20.dp, shape, ambientColor = glass.shadow, spotColor = glass.shadow)
-                .glass(glass, shape, backdrop = backdrop),
+                .glass(glass, shape, backdrop = backdrop, sheen = true),
         ) {
             val itemWidth = maxWidth / tabs.size
             if (index >= 0) {
@@ -98,5 +99,13 @@ fun GlassNavBar(selected: TopLevelDestination?, onSelect: (TopLevelDestination) 
 @Composable
 fun GlassTopBar(backdrop: Backdrop, content: @Composable () -> Unit) {
     val glass = MyMoneyTheme.glass
-    Box(Modifier.fillMaxWidth().glass(glass, RectangleShape, backdrop = backdrop)) { content() }
+    Box(
+        Modifier.fillMaxWidth()
+            .glass(glass, RectangleShape, backdrop = backdrop, edge = false)
+            .drawWithContent {
+                drawContent()
+                // A faint hairline instead of a hard frame, so the bar melts into the screen.
+                if (glass.enabled) drawLine(androidx.compose.ui.graphics.Color.White.copy(alpha = if (glass.dark) 0.08f else 0.6f), androidx.compose.ui.geometry.Offset(0f, size.height), androidx.compose.ui.geometry.Offset(size.width, size.height), 1.dp.toPx())
+            },
+    ) { content() }
 }

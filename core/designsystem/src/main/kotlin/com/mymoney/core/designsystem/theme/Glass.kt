@@ -49,7 +49,13 @@ data class GlassStyle(
     val cardTint: Color get() = if (!enabled) (if (dark) Color(0xFF151A19) else Color(0xFFF2F5F3)) else if (dark) Color(0xFF1A2321).copy(alpha = 0.62f) else Color.White.copy(alpha = 0.66f)
 
     /** Bar fill drawn over the blurred backdrop. */
-    val barTint: Color get() = if (dark) Color(0xFF111816).copy(alpha = if (blurAvailable) 0.55f else 0.94f) else Color.White.copy(alpha = if (blurAvailable) 0.58f else 0.95f)
+    val barTint: Color get() = if (dark) Color(0xFF0E1513).copy(alpha = if (blurAvailable) 0.36f else 0.94f) else Color.White.copy(alpha = if (blurAvailable) 0.40f else 0.95f)
+
+    /** Glossy highlight across the top of bars, like light on a curved glass edge. */
+    val sheen: Brush get() = Brush.verticalGradient(
+        if (dark) listOf(Color.White.copy(alpha = 0.10f), Color.White.copy(alpha = 0f))
+        else listOf(Color.White.copy(alpha = 0.55f), Color.White.copy(alpha = 0f)),
+    )
 
     /** Light-catching edge: bright at the top-left, fading out. */
     val edge: Brush get() = Brush.linearGradient(
@@ -151,7 +157,10 @@ fun Modifier.glass(
     tint: Color = style.barTint,
     backdrop: Backdrop? = null,
     blur: Dp = 28.dp,
-): Modifier = this then GlassElement(style, shape, tint, backdrop, blur)
+    /** Light edge around the whole shape (cards, floating bar); off for edge-to-edge bars. */
+    edge: Boolean = true,
+    sheen: Boolean = false,
+): Modifier = this then GlassElement(style, shape, tint, backdrop, blur, edge, sheen)
 
 private data class GlassElement(
     val style: GlassStyle,
@@ -159,9 +168,11 @@ private data class GlassElement(
     val tint: Color,
     val backdrop: Backdrop?,
     val blur: Dp,
+    val edge: Boolean,
+    val sheen: Boolean,
 ) : ModifierNodeElement<GlassNode>() {
-    override fun create() = GlassNode(style, shape, tint, backdrop, blur)
-    override fun update(node: GlassNode) = node.update(style, shape, tint, backdrop, blur)
+    override fun create() = GlassNode(style, shape, tint, backdrop, blur, edge, sheen)
+    override fun update(node: GlassNode) = node.update(style, shape, tint, backdrop, blur, edge, sheen)
     override fun InspectorInfo.inspectableProperties() { name = "glass" }
 }
 
@@ -171,12 +182,15 @@ private class GlassNode(
     var tint: Color,
     var backdrop: Backdrop?,
     var blur: Dp,
+    var edge: Boolean,
+    var sheen: Boolean,
 ) : Modifier.Node(), DrawModifierNode, GlobalPositionAwareModifierNode {
     private var layer: GraphicsLayer? = null
     private var position = Offset.Zero
     private val invalidate: () -> Unit = { if (isAttached) invalidateDraw() }
 
-    fun update(style: GlassStyle, shape: Shape, tint: Color, backdrop: Backdrop?, blur: Dp) {
+    fun update(style: GlassStyle, shape: Shape, tint: Color, backdrop: Backdrop?, blur: Dp, edge: Boolean, sheen: Boolean) {
+        this.edge = edge; this.sheen = sheen
         if (this.backdrop !== backdrop) {
             this.backdrop?.listeners?.remove(invalidate)
             backdrop?.listeners?.add(invalidate)
@@ -209,14 +223,15 @@ private class GlassNode(
             val px = blur.toPx()
             l.renderEffect = BlurEffect(px, px, TileMode.Clamp)
             // Slightly richer colours through the glass, like iOS/Telegram.
-            l.colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(1.35f) })
+            l.colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(1.6f) })
             val dx = backdrop!!.origin.x - position.x
             val dy = backdrop!!.origin.y - position.y
             l.record(size.toIntSize()) { translate(dx, dy) { drawLayer(source) } }
             clipPath(path) { drawLayer(l) }
         }
         drawPath(path, tint)
-        if (style.enabled) drawPath(path, style.edge, style = Stroke(width = 1.dp.toPx()))
+        if (style.enabled && sheen) drawPath(path, style.sheen)
+        if (style.enabled && edge) drawPath(path, style.edge, style = Stroke(width = 1.dp.toPx()))
         drawContent()
     }
 }

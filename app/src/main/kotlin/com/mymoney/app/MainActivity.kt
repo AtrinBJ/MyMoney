@@ -3,6 +3,7 @@ package com.mymoney.app
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.compose.setContent
+import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -57,6 +58,15 @@ class MainActivity : AppCompatActivity() {
                 ThemeMode.SYSTEM -> isSystemInDarkTheme()
                 ThemeMode.LIGHT -> false
                 ThemeMode.DARK -> true
+            }
+            // Status/navigation bar icons follow the app's theme, not the system's (light app on a dark phone).
+            androidx.compose.runtime.DisposableEffect(dark) {
+                val transparent = android.graphics.Color.TRANSPARENT
+                enableEdgeToEdge(
+                    statusBarStyle = if (dark) SystemBarStyle.dark(transparent) else SystemBarStyle.light(transparent, transparent),
+                    navigationBarStyle = if (dark) SystemBarStyle.dark(transparent) else SystemBarStyle.light(transparent, transparent),
+                )
+                onDispose {}
             }
             // The resource configuration reflects the per-app locale chosen by the user.
             val language = AppLanguage.fromTag(LocalConfiguration.current.locales[0]?.language) ?: AppLanguage.EN

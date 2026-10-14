@@ -1,5 +1,13 @@
 package com.mymoney.app.feature.transactions
 
+import com.mymoney.core.designsystem.theme.rememberBackdrop
+import com.mymoney.core.designsystem.theme.glass
+import com.mymoney.core.designsystem.theme.backdropSource
+import com.mymoney.core.designsystem.theme.AmbientBackground
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -93,9 +101,49 @@ fun TransactionsScreen(
         }
     }
 
-    Column(Modifier.fillMaxSize().padding(contentPadding)) {
+    // The list runs the full height and scrolls under the glass search header and the floating tab bar.
+    val glass = MyMoneyTheme.glass
+    val density = LocalDensity.current
+    val topPad = contentPadding.calculateTopPadding()
+    var headerHeight by remember { mutableStateOf(0.dp) }
+    val listTop = topPad + if (showSearch) headerHeight else 0.dp
+    val listBackdrop = rememberBackdrop()
+    Box(Modifier.fillMaxSize()) {
+        Box(Modifier.fillMaxSize().backdropSource(listBackdrop)) {
+            AmbientBackground()
+            val refreshing = items.loadState.refresh is LoadState.Loading && items.itemCount == 0
+            when {
+                refreshing -> LoadingSkeleton(Modifier.padding(top = listTop))
+                items.itemCount == 0 -> EmptyState(
+                    icon = Icons.AutoMirrored.Outlined.ReceiptLong,
+                    title = stringResource(if (filter.isActive) R.string.tx_no_results_title else R.string.tx_empty_title),
+                    message = stringResource(if (filter.isActive) R.string.tx_no_results_message else R.string.tx_empty_message),
+                    modifier = Modifier.padding(top = listTop, bottom = contentPadding.calculateBottomPadding()),
+                )
+                else -> LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(top = listTop, bottom = contentPadding.calculateBottomPadding() + 96.dp)) {
+                    items(items.itemCount, key = items.itemKey { it.key() }, contentType = { i -> items.peek(i)?.let { it::class.simpleName } }) { i ->
+                        when (val item = items[i]) {
+                            is TxListItem.Header -> Text(
+                                formats.dates.long(item.date),
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 4.dp),
+                            )
+                            is TxListItem.Row -> EntryRowItem(item.row, onClick = { onOpen(item.row.groupId) })
+                            null -> Spacer(Modifier.height(72.dp))
+                        }
+                    }
+                }
+            }
+        }
         if (showSearch) {
-            Row(Modifier.padding(horizontal = 16.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                Modifier.padding(top = topPad).fillMaxWidth()
+                    .onSizeChanged { headerHeight = with(density) { it.height.toDp() } }
+                    .glass(glass, RectangleShape, tint = glass.barTint, backdrop = listBackdrop, edge = false)
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 OutlinedTextField(
                     value = filter.text.orEmpty(),
                     onValueChange = viewModel::setText,
@@ -107,29 +155,6 @@ fun TransactionsScreen(
                 IconButton(onClick = { showFilters = true }) {
                     BadgedBox(badge = { if (filter.copy(text = null).isActive) Badge() }) {
                         Icon(Icons.Outlined.FilterList, contentDescription = stringResource(R.string.action_filter))
-                    }
-                }
-            }
-        }
-        val refreshing = items.loadState.refresh is LoadState.Loading && items.itemCount == 0
-        when {
-            refreshing -> LoadingSkeleton()
-            items.itemCount == 0 -> EmptyState(
-                icon = Icons.AutoMirrored.Outlined.ReceiptLong,
-                title = stringResource(if (filter.isActive) R.string.tx_no_results_title else R.string.tx_empty_title),
-                message = stringResource(if (filter.isActive) R.string.tx_no_results_message else R.string.tx_empty_message),
-            )
-            else -> LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = 96.dp)) {
-                items(items.itemCount, key = items.itemKey { it.key() }, contentType = { i -> items.peek(i)?.let { it::class.simpleName } }) { i ->
-                    when (val item = items[i]) {
-                        is TxListItem.Header -> Text(
-                            formats.dates.long(item.date),
-                            style = MaterialTheme.typography.labelLarge,
-                            color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 4.dp),
-                        )
-                        is TxListItem.Row -> EntryRowItem(item.row, onClick = { onOpen(item.row.groupId) })
-                        null -> Spacer(Modifier.height(72.dp))
                     }
                 }
             }

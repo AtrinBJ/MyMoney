@@ -225,16 +225,6 @@ internal fun SettingsContent(
 
             SectionHeader(stringResource(R.string.settings_section_privacy))
             SecuritySettings(state, s, onUpdate, links, cancel)
-
-            SectionHeader(stringResource(R.string.about_title))
-            LinkRow(stringResource(R.string.settings_about), { links.data(com.mymoney.app.navigation.AboutRoute) })
-
-            if (state.debugActions.isNotEmpty()) {
-                // Debug builds only; not translated on purpose.
-                SectionHeader("Developer (debug build)")
-                state.debugActions.forEach { a -> LinkRow(a.label, { links.debug(a) }) }
-                state.debugMessage?.let { Text(it, style = androidx.compose.material3.MaterialTheme.typography.bodySmall, modifier = Modifier.padding(horizontal = 16.dp)) }
-            }
             SwitchRow(
                 title = stringResource(R.string.settings_secure_screen),
                 description = stringResource(R.string.settings_secure_screen_desc),
@@ -246,6 +236,16 @@ internal fun SettingsContent(
                 checked = s.hideAmountsOnStart,
                 onCheckedChange = { v -> onUpdate { it.copy(hideAmountsOnStart = v) } },
             )
+
+            SectionHeader(stringResource(R.string.about_title))
+            LinkRow(stringResource(R.string.settings_about), { links.data(com.mymoney.app.navigation.AboutRoute) })
+
+            if (state.debugActions.isNotEmpty()) {
+                // Debug builds only; not translated on purpose.
+                SectionHeader("Developer (debug build)")
+                state.debugActions.forEach { a -> LinkRow(a.label, { links.debug(a) }) }
+                state.debugMessage?.let { Text(it, style = androidx.compose.material3.MaterialTheme.typography.bodySmall, modifier = Modifier.padding(horizontal = 16.dp)) }
+            }
         }
     }
 }
