@@ -220,6 +220,9 @@ internal fun SettingsContent(
             SectionHeader(stringResource(R.string.settings_section_privacy))
             SecuritySettings(state, s, onUpdate, links, cancel)
 
+            SectionHeader(stringResource(R.string.about_title))
+            LinkRow(stringResource(R.string.settings_about), { links.data(com.mymoney.app.navigation.AboutRoute) })
+
             if (state.debugActions.isNotEmpty()) {
                 // Debug builds only; not translated on purpose.
                 SectionHeader("Developer (debug build)")

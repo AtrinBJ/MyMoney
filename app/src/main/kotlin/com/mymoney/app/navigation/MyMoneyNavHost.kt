@@ -140,6 +140,7 @@ fun MyMoneyNavHost(
         composable<ExportRoute> { ExportScreen(onBack = back) }
         composable<ImportRoute> { ImportScreen(onBack = back) }
         composable<TrashRoute> { TrashScreen(onBack = back) }
+        composable<AboutRoute> { com.mymoney.app.feature.settings.AboutScreen(onBack = back) }
         composable<DeleteAllRoute> { DeleteAllScreen(onBack = back, onBackup = { navController.navigate(BackupRoute) }) }
         composable<PinSetupRoute> { PinSetupScreen(onDone = back) }
         composable<SearchRoute> {

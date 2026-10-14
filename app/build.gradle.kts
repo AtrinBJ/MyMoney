@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -5,6 +7,16 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
 }
+
+// Release signing (BUILD.md §Signing): keystore.properties (never committed) holds storeFile, storePassword,
+// keyAlias and keyPassword. Without it, release is signed with the local debug key and named "-DEBUGSIGNED":
+// installable for testing, not for publishing.
+val keystoreProps: Properties? = rootProject.file("keystore.properties").takeIf { it.exists() }?.let { f ->
+    val props = Properties()
+    f.inputStream().use { props.load(it) }
+    props
+}
+val appVersionName = "1.0.0-rc.1"
 
 android {
     namespace = "com.mymoney.app"
@@ -14,12 +26,23 @@ android {
         applicationId = "com.mymoney.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = "0.3.0"
+        versionCode = 10
+        versionName = appVersionName
         // Hilt test application for on-device tests (src/androidTest/HiltTestRunner).
         testInstrumentationRunner = "com.mymoney.app.HiltTestRunner"
         // Galaxy A55 is arm64; x86_64 keeps emulator support. Drops ~2/3 of SQLCipher's native size.
         ndk { abiFilters += listOf("arm64-v8a", "x86_64") }
+    }
+
+    signingConfigs {
+        if (keystoreProps != null) {
+            create("release") {
+                storeFile = rootProject.file(keystoreProps.getProperty("storeFile"))
+                storePassword = keystoreProps.getProperty("storePassword")
+                keyAlias = keystoreProps.getProperty("keyAlias")
+                keyPassword = keystoreProps.getProperty("keyPassword")
+            }
+        }
     }
 
     buildTypes {
@@ -32,6 +55,7 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = if (keystoreProps != null) signingConfigs.getByName("release") else signingConfigs.getByName("debug")
         }
     }
 
@@ -106,4 +130,23 @@ dependencies {
     androidTestImplementation(libs.hilt.android.testing)
     androidTestImplementation(libs.kotlin.test)
     kspAndroidTest(libs.hilt.compiler)
+}
+
+/**
+ * `./gradlew dist`: builds debug APK, release APK and release AAB and copies them to dist/ with names that say
+ * how they are signed.
+ */
+val releaseSuffix = if (keystoreProps != null) "release" else "release-DEBUGSIGNED"
+tasks.register<Copy>("dist") {
+    group = "distribution"
+    description = "Builds and collects the deliverables in dist/"
+    dependsOn("assembleDebug", "assembleRelease", "bundleRelease")
+    // Plain local copies: the configuration cache cannot serialize references to the build script.
+    val v = appVersionName
+    val suffix = releaseSuffix
+    into(rootProject.layout.projectDirectory.dir("dist"))
+    from(layout.buildDirectory.file("outputs/apk/debug/app-debug.apk")) { rename { "MyMoney-$v-debug.apk" } }
+    from(layout.buildDirectory.file("outputs/apk/release/app-release.apk")) { rename { "MyMoney-$v-$suffix.apk" } }
+    from(layout.buildDirectory.file("outputs/bundle/release/app-release.aab")) { rename { "MyMoney-$v-$suffix.aab" } }
+    from(layout.buildDirectory.file("outputs/mapping/release/mapping.txt")) { rename { "MyMoney-$v-mapping.txt" } }
 }

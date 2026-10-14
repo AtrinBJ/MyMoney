@@ -140,4 +140,11 @@
     <string name="att_err_large">The file is larger than 20 MB.</string>
     <string name="att_err_read">The file could not be read.</string>
     <string name="att_no_viewer">No app on this phone can open this file.</string>
+    <string name="about_title">About</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_privacy_title">Your data stays on this phone</string>
+    <string name="about_privacy">The app has no internet permission. Nothing is sent anywhere; data leaves the phone only when you make a backup or an export yourself. The database and attachments are encrypted.</string>
+    <string name="about_licenses">Open-source licenses</string>
+    <string name="about_show_ofl">Show the Vazirmatn font license</string>
+    <string name="settings_about">About and licenses</string>
 </resources>

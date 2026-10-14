@@ -140,4 +140,11 @@
     <string name="att_err_large">حجم فایل بیشتر از ۲۰ مگابایت است.</string>
     <string name="att_err_read">فایل خوانده نشد.</string>
     <string name="att_no_viewer">برنامه‌ای برای باز کردن این فایل روی گوشی نیست.</string>
+    <string name="about_title">درباره برنامه</string>
+    <string name="about_version">نسخه %1$s</string>
+    <string name="about_privacy_title">داده‌های شما روی همین گوشی می‌ماند</string>
+    <string name="about_privacy">این برنامه مجوز اینترنت ندارد و هیچ داده‌ای به جایی ارسال نمی‌کند. داده فقط وقتی از گوشی خارج می‌شود که خودتان پشتیبان یا خروجی بگیرید. پایگاه داده و پیوست‌ها رمزنگاری شده‌اند.</string>
+    <string name="about_licenses">مجوزهای متن‌باز</string>
+    <string name="about_show_ofl">نمایش مجوز فونت وزیرمتن</string>
+    <string name="settings_about">درباره و مجوزها</string>
 </resources>

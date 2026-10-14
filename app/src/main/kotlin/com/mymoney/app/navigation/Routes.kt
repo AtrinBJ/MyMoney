@@ -84,6 +84,7 @@ data class EntryEditorRoute(
 @Serializable data object ImportRoute
 @Serializable data object TrashRoute
 @Serializable data object DeleteAllRoute
+@Serializable data object AboutRoute
 
 enum class TopLevelDestination(
     val graph: Any,
